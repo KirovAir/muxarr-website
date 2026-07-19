@@ -289,8 +289,10 @@
       - PUID=1000
       - PGID=1000
     volumes:
-      - /path/to/data:/data
-      - /path/to/media:/media
+      # Muxarr's own database and config
+      - /path/to/muxarr/data:/data
+      # your media library, mount it wherever you like
+      - /path/to/your/media:/media
     ports:
       - 8183:8183
     restart: unless-stopped</code></pre>
@@ -308,8 +310,8 @@
   -e PUID=1000 \
   -e PGID=1000 \
   -p 8183:8183 \
-  -v /path/to/data:/data \
-  -v /path/to/media:/media \
+  -v /path/to/muxarr/data:/data \
+  -v /path/to/your/media:/media \
   --restart unless-stopped \
   ghcr.io/kirovair/muxarr:latest</code></pre>
         </div>
@@ -319,8 +321,9 @@
 
     <p class="text-body-secondary mt-3 mb-5">
       <i class="bi bi-info-circle"></i>
-      Images are published for <code>linux/amd64</code> and <code>linux/arm64</code>. Add
-      as many <code>/media</code> mounts as you need.
+      Images are published for <code>linux/amd64</code> and <code>linux/arm64</code>.
+      Only <code>/data</code> is fixed. Name your library mounts whatever suits your
+      setup and add as many as you need, then point a profile at them in the wizard.
     </p>
 
     <div class="row g-4 mb-5">
@@ -343,8 +346,8 @@
           <table class="table table-sm align-middle">
             <thead><tr><th>Path</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td><code>/data</code></td><td>Database and configuration</td></tr>
-              <tr><td><code>/media</code></td><td>Media files</td></tr>
+              <tr><td><code>/data</code></td><td>Muxarr's own database and configuration. Keep this one as <code>/data</code>.</td></tr>
+              <tr><td><code>/media</code></td><td>Your media library. The container path is up to you, use <code>/movies</code>, <code>/tv</code> or anything else.</td></tr>
             </tbody>
           </table>
         </div>
