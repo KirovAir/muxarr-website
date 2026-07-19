@@ -16,6 +16,16 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Light theme: warm off-white rather than flat #fff */
+[data-bs-theme="light"] {
+    --bs-body-bg: #f7f6f4;
+    --bs-tertiary-bg: #edebe7;
+}
+
+[data-bs-theme="light"] .card {
+    background: #fff;
+}
+
 /* Match the app: navy body, not Bootstrap's default grey */
 [data-bs-theme="dark"] {
     --bs-body-bg: var(--mux-navy);
@@ -86,10 +96,43 @@ section[id], header[id] {
 
 .mux-hero {
     padding: 4rem 0 3.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Warm wash behind the logo, picked from the logo's own gradient.
+   Keeps the light theme off the flat-white default. */
+.mux-hero::before {
+    content: '';
+    position: absolute;
+    top: -18rem;
+    left: 50%;
+    width: 60rem;
+    height: 42rem;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(240, 82, 30, 0.13), transparent);
+    pointer-events: none;
+    z-index: -1;
+}
+
+[data-bs-theme="dark"] .mux-hero::before {
+    background: radial-gradient(closest-side, rgba(240, 82, 30, 0.20), transparent);
 }
 
 .mux-hero-logo {
     height: auto;
+    filter: drop-shadow(0 10px 24px rgba(240, 82, 30, 0.28));
+}
+
+/* Never scale past the 960px source, upscaling makes the UI text mushy */
+.mux-shot video {
+    display: block;
+    width: 100%;
+    max-width: 860px;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
 }
 
 .mux-wordmark {
@@ -146,6 +189,20 @@ section[id], header[id] {
     color: var(--mux-orange);
     display: block;
     margin-bottom: 0.75rem;
+}
+
+.card {
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(240, 82, 30, 0.45);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.10);
+}
+
+[data-bs-theme="dark"] .card:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.45);
 }
 
 .card p {
@@ -239,5 +296,11 @@ section[id], header[id] {
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+
+    .card,
+    .card:hover {
+        transition: none;
+        transform: none;
     }
 }

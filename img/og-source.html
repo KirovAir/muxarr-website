@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- Source for img/og.png. Render with:
+     chrome --headless --screenshot --window-size=1200,630 img/og-source.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #0d0d1a;
+    background-image:
+      radial-gradient(circle at 50% 12%, rgba(240, 82, 30, 0.20), transparent 62%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  img { width: 190px; height: 190px; margin-bottom: 28px; }
+
+  h1 {
+    font-size: 96px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .rule {
+    width: 120px;
+    height: 5px;
+    background: #f0521e;
+    border-radius: 3px;
+    margin: 26px 0;
+  }
+
+  p {
+    font-size: 33px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 400;
+  }
+</style>
+</head>
+<body>
+  <img src="logo.png" alt="">
+  <h1>Muxarr</h1>
+  <div class="rule"></div>
+  <p>Clean up the audio and subtitle tracks in your media library</p>
+</body>
+</html>
