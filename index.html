@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muxarr</title>
+<meta name="description" content="Muxarr removes unwanted audio and subtitle tracks and standardizes track metadata, without re-encoding. Hooks into Sonarr and Radarr so new imports get cleaned up as they arrive.">
+
+<link rel="canonical" href="https://muxarr.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Muxarr">
+<meta property="og:description" content="Strip the audio and subtitle tracks you'll never play. No re-encoding, no quality loss.">
+<meta property="og:url" content="https://muxarr.app/">
+<meta property="og:image" content="https://muxarr.app/img/logo.png">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+<!-- same versions the app itself uses -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="css/site.css" rel="stylesheet">
+<script>
+  // set before paint so the page never flashes the wrong theme
+  document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme') || 'light');
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#top">
+      <img src="img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-md-center">
+        <li class="nav-item"><a class="nav-link" href="#top"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#features"><i class="bi bi-check2-square"></i> Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link" href="#screenshots"><i class="bi bi-images"></i> Screenshots</a></li>
+        <li class="nav-item"><a class="nav-link" href="#support"><i class="bi bi-question-circle"></i> Support</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+        <li class="nav-item">
+          <button class="btn btn-sm mux-theme-btn ms-md-2" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+            <i class="bi bi-moon-stars"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ─────────────── hero ─────────────── -->
+<header class="mux-hero text-center" id="top">
+  <div class="container">
+    <img src="img/logo.png" alt="Muxarr" class="mux-hero-logo mb-4" width="120" height="120">
+    <h1 class="mux-wordmark">Muxarr</h1>
+    <p class="lead mb-4">Clean up the audio and subtitle tracks in your media library</p>
+
+    <p class="mux-hero-text mx-auto mb-4">
+      Muxarr removes unwanted audio and subtitle tracks and standardizes track metadata.
+      It uses mkvmerge for MKV files and ffmpeg with stream copy for other containers, so
+      tracks are remuxed rather than re-encoded and there is zero quality loss. A 4&nbsp;GB
+      file takes about a minute instead of hours, even on low-end hardware like a NAS or
+      Raspberry&nbsp;Pi.
+    </p>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
+      <a class="btn btn-primary btn-lg" href="#setup"><i class="bi bi-download"></i> Get started</a>
+      <a class="btn btn-outline-secondary btn-lg" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a>
+    </div>
+
+    <figure class="mux-shot mb-0">
+      <img src="img/screenshots/demo.gif" alt="Muxarr processing a file and reporting a 35.9 percent size reduction" class="img-fluid">
+      <figcaption class="mux-caption">A quick demo of a file being optimized (35.9% reduction)</figcaption>
+    </figure>
+  </div>
+</header>
+
+<!-- ─────────────── features ─────────────── -->
+<section class="mux-section" id="features">
+  <div class="container">
+    <h2 class="mux-heading">Features</h2>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-scissors mux-icon"></i>
+            <h3 class="h5">Strip unwanted tracks</h3>
+            <p class="mb-0">
+              Remove audio (commentary, foreign dubs) and subtitles (SDH, foreign) without
+              re-encoding, so quality is untouched. Cutting spare audio tracks alone often
+              saves 10-30%.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-translate mux-icon"></i>
+            <h3 class="h5">Original language detection</h3>
+            <p class="mb-0">
+              Integrates with your *arr stack so foreign films and shows always keep the
+              correct audio track.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-lightning-charge mux-icon"></i>
+            <h3 class="h5">Automatic processing</h3>
+            <p class="mb-0">
+              Webhook support to process new imports as they arrive, with a configurable
+              delay so tools like Bazarr can finish first.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-folder2-open mux-icon"></i>
+            <h3 class="h5">Per-directory profiles</h3>
+            <p class="mb-0">
+              Different language and track rules for different collections, for example
+              anime versus western media.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-sort-down mux-icon"></i>
+            <h3 class="h5">Language priority &amp; track limits</h3>
+            <p class="mb-0">
+              Control track ordering per language, limit tracks per language, and choose
+              between best quality or smallest size.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-tags mux-icon"></i>
+            <h3 class="h5">Smart metadata fixes</h3>
+            <p class="mb-0">
+              Cleans encoder tags and codec dumps from track names. Uses mkvpropedit for
+              metadata-only changes, so there is no remux at all.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-shield-check mux-icon"></i>
+            <h3 class="h5">Safe by default</h3>
+            <p class="mb-0">
+              Validates the output file before replacing the original. If anything fails,
+              the original is untouched.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-bar-chart mux-icon"></i>
+            <h3 class="h5">Library overview</h3>
+            <p class="mb-0">
+              A full breakdown of codecs, resolutions and languages across your library,
+              plus a per-file track view before you commit to anything.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <i class="bi bi-bell mux-icon"></i>
+            <h3 class="h5">Notifications</h3>
+            <p class="mb-0">
+              Apprise, Discord, Gotify, Ntfy, Pushover, Slack and Telegram, plus library
+              rescans for Plex, Emby and Jellyfin.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── setup ─────────────── -->
+<section class="mux-section mux-section-alt" id="setup">
+  <div class="container">
+    <h2 class="mux-heading">Setup</h2>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-compose" type="button" role="tab" aria-controls="tab-compose" aria-selected="true">
+          <i class="bi bi-file-earmark-code"></i> Docker Compose
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-run" type="button" role="tab" aria-controls="tab-run" aria-selected="false">
+          <i class="bi bi-terminal"></i> Docker run
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content mux-tab-body">
+
+      <div class="tab-pane fade show active" id="tab-compose" role="tabpanel">
+        <h3 class="h5">Installation</h3>
+        <p>Save this as <code>docker-compose.yml</code> and run <code>docker compose up -d</code>.</p>
+        <div class="mux-code">
+          <button class="btn btn-sm btn-outline-secondary mux-copy" type="button" data-copy="compose">Copy</button>
+<pre id="compose"><code>services:
+  muxarr:
+    image: ghcr.io/kirovair/muxarr:latest
+    container_name: muxarr
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /path/to/data:/data
+      - /path/to/media:/media
+    ports:
+      - 8183:8183
+    restart: unless-stopped</code></pre>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tab-run" role="tabpanel">
+        <h3 class="h5">Installation</h3>
+        <p>The same thing without a compose file.</p>
+        <div class="mux-code">
+          <button class="btn btn-sm btn-outline-secondary mux-copy" type="button" data-copy="run">Copy</button>
+<pre id="run"><code>docker run -d \
+  --name=muxarr \
+  -e TZ=Europe/Amsterdam \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -p 8183:8183 \
+  -v /path/to/data:/data \
+  -v /path/to/media:/media \
+  --restart unless-stopped \
+  ghcr.io/kirovair/muxarr:latest</code></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="text-body-secondary mt-3 mb-5">
+      <i class="bi bi-info-circle"></i>
+      Images are published for <code>linux/amd64</code> and <code>linux/arm64</code>. Add
+      as many <code>/media</code> mounts as you need.
+    </p>
+
+    <div class="row g-4 mb-5">
+      <div class="col-lg-6">
+        <h3 class="h5">Environment variables</h3>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead><tr><th>Variable</th><th>Description</th><th>Default</th></tr></thead>
+            <tbody>
+              <tr><td><code>TZ</code></td><td>Timezone</td><td><code>UTC</code></td></tr>
+              <tr><td><code>PUID</code></td><td>User ID for file permissions</td><td><code>1000</code></td></tr>
+              <tr><td><code>PGID</code></td><td>Group ID for file permissions</td><td><code>1000</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <h3 class="h5">Volumes</h3>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead><tr><th>Path</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>/data</code></td><td>Database and configuration</td></tr>
+              <tr><td><code>/media</code></td><td>Media files</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="h5">First run</h3>
+    <ol class="mux-steps">
+      <li>Open <code>http://your-ip:8183</code> and the setup wizard will guide you through.</li>
+      <li>Set a username and password (optional).</li>
+      <li>Connect Sonarr and Radarr for original language detection and webhook automation (optional).</li>
+      <li>Create a profile with your media directories and language rules.</li>
+      <li>Scan your library, preview the changes, and queue files for processing.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ─────────────── screenshots ─────────────── -->
+<section class="mux-section" id="screenshots">
+  <div class="container">
+    <h2 class="mux-heading">Screenshots</h2>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/dashboard.png" alt="Muxarr dashboard" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">Dashboard</figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/filedetails.png" alt="File details with track preview" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">File details with track preview</figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/settings.png" alt="Profile settings" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">Profile settings</figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/statistics.png" alt="Library statistics" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">Statistics</figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/before.png" alt="Track names before cleanup" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">Before metadata cleanup</figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-6">
+        <figure class="mux-shot">
+          <img src="img/screenshots/after.png" alt="Track names after cleanup" class="img-fluid" loading="lazy">
+          <figcaption class="mux-caption">After metadata cleanup</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── support ─────────────── -->
+<section class="mux-section mux-section-alt" id="support">
+  <div class="container">
+    <h2 class="mux-heading">Support</h2>
+
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <i class="bi bi-github mux-support-icon"></i>
+        <h3 class="h5">GitHub Issues</h3>
+        <p class="mb-0">Report a bug or request a feature.</p>
+        <a href="https://github.com/KirovAir/muxarr/issues">Open an issue</a>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-box-seam mux-support-icon"></i>
+        <h3 class="h5">Container registry</h3>
+        <p class="mb-0">Every tag published to ghcr.io.</p>
+        <a href="https://github.com/KirovAir/muxarr/pkgs/container/muxarr">Browse images</a>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-journal-text mux-support-icon"></i>
+        <h3 class="h5">Releases</h3>
+        <p class="mb-0">Changelog and version history.</p>
+        <a href="https://github.com/KirovAir/muxarr/releases">See releases</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">
+      Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

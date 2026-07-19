@@ -1,0 +1,243 @@
+/* ============================================
+   Muxarr website — thin theme layer.
+   Same approach as the app: Bootstrap does the work,
+   this only covers branding and the navy dark mode.
+   ============================================ */
+
+:root {
+    --mux-navy: #0d0d1a;
+    --mux-navy-light: #1e1e32;
+    --mux-surface: #232338;
+    --mux-border: rgba(255, 255, 255, 0.06);
+    --mux-orange: #f0521e;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Match the app: navy body, not Bootstrap's default grey */
+[data-bs-theme="dark"] {
+    --bs-body-bg: var(--mux-navy);
+    --bs-body-color: rgba(255, 255, 255, 0.87);
+    --bs-heading-color: #fff;
+    --bs-border-color: var(--mux-border);
+}
+
+[data-bs-theme="dark"] .card {
+    background: var(--mux-navy-light);
+    border-color: var(--mux-border);
+}
+
+/* Bootstrap's outline-secondary sits at too low a contrast on the navy */
+[data-bs-theme="dark"] .btn-outline-secondary {
+    --bs-btn-color: rgba(255, 255, 255, 0.87);
+    --bs-btn-border-color: rgba(255, 255, 255, 0.25);
+    --bs-btn-hover-bg: var(--mux-surface);
+    --bs-btn-hover-border-color: rgba(255, 255, 255, 0.4);
+    --bs-btn-hover-color: #fff;
+}
+
+section[id], header[id] {
+    scroll-margin-top: 64px;
+}
+
+/* ---- Navbar (stays navy in both themes, like the app sidebar) ---- */
+
+.mux-navbar {
+    background: var(--mux-navy);
+    border-bottom: 1px solid var(--mux-border);
+}
+
+.mux-navbar .navbar-brand {
+    color: #fff;
+    font-weight: 600;
+}
+
+.mux-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.9375rem;
+}
+
+.mux-navbar .nav-link:hover,
+.mux-navbar .nav-link:focus {
+    color: #fff;
+}
+
+.mux-navbar .navbar-toggler {
+    border-color: var(--mux-border);
+}
+
+.mux-navbar .navbar-toggler-icon {
+    filter: invert(1) grayscale(1) brightness(2);
+}
+
+.mux-theme-btn {
+    color: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--mux-border);
+}
+
+.mux-theme-btn:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Hero ---- */
+
+.mux-hero {
+    padding: 4rem 0 3.5rem;
+}
+
+.mux-hero-logo {
+    height: auto;
+}
+
+.mux-wordmark {
+    font-size: clamp(2.5rem, 7vw, 3.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+.mux-hero-text {
+    max-width: 44rem;
+    color: var(--bs-secondary-color);
+}
+
+/* ---- Sections ---- */
+
+.mux-section {
+    padding: 4rem 0;
+}
+
+.mux-section-alt {
+    background: var(--bs-tertiary-bg);
+}
+
+[data-bs-theme="dark"] .mux-section-alt {
+    background: var(--mux-navy-light);
+}
+
+/* Centered heading with a short brand rule under it, like the *arr sites */
+.mux-heading {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    padding-bottom: 0.75rem;
+    position: relative;
+}
+
+.mux-heading::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 3rem;
+    height: 3px;
+    background: var(--mux-orange);
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* ---- Feature cards ---- */
+
+.mux-icon {
+    font-size: 1.75rem;
+    color: var(--mux-orange);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.card p {
+    color: var(--bs-secondary-color);
+    font-size: 0.9375rem;
+}
+
+/* ---- Screenshots ---- */
+
+.mux-shot {
+    margin: 0;
+}
+
+.mux-shot img {
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.mux-caption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--bs-secondary-color);
+    text-align: center;
+}
+
+/* ---- Code blocks ---- */
+
+.mux-code {
+    position: relative;
+}
+
+.mux-code pre {
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    padding: 1rem;
+    margin: 0;
+    overflow-x: auto;
+    font-size: 0.875rem;
+}
+
+[data-bs-theme="dark"] .mux-code pre {
+    background: var(--mux-navy);
+    border-color: var(--mux-border);
+}
+
+.mux-copy {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+}
+
+.mux-tab-body {
+    border: 1px solid var(--bs-border-color);
+    border-top: 0;
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+    padding: 1.5rem;
+}
+
+[data-bs-theme="dark"] .mux-tab-body,
+[data-bs-theme="dark"] .nav-tabs {
+    border-color: var(--mux-border);
+}
+
+.mux-steps li {
+    margin-bottom: 0.5rem;
+}
+
+/* ---- Support ---- */
+
+.mux-support-icon {
+    font-size: 2.5rem;
+    color: var(--mux-orange);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+/* ---- Footer ---- */
+
+.mux-footer {
+    background: var(--mux-navy);
+    color: rgba(255, 255, 255, 0.72);
+    padding: 2rem 0;
+}
+
+.mux-footer a {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
