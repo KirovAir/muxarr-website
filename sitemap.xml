@@ -5,4 +5,9 @@
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url><loc>https://muxarr.app/docs/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://muxarr.app/docs/profiles.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://muxarr.app/docs/library.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://muxarr.app/docs/integrations.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://muxarr.app/docs/faq.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

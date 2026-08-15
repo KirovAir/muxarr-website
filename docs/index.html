@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started | Muxarr docs</title>
+<meta name="description" content="Install Muxarr, run the setup wizard, create your first profile and clean up your first file. What Muxarr does, what it never does, and how a conversion stays safe.">
+<meta name="theme-color" content="#0d0d1a">
+<link rel="canonical" href="https://muxarr.app/docs/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Muxarr">
+<meta property="og:title" content="Getting started | Muxarr docs">
+<meta property="og:description" content="Install Muxarr, run the setup wizard, create your first profile and clean up your first file.">
+<meta property="og:url" content="https://muxarr.app/docs/">
+<meta property="og:image" content="https://muxarr.app/img/og.png">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="../css/site.css" rel="stylesheet">
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', stored || system);
+  })();
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../">
+      <img src="../img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 order-lg-last ms-lg-3">
+      <button class="btn btn-sm mux-theme-btn" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="../"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="../#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link active" href="./"><i class="bi bi-book"></i> Docs</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mux-docs">
+  <div class="row g-5">
+
+    <aside class="col-lg-3">
+      <nav class="mux-docs-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link active" href="./">Getting started</a>
+            <ul class="nav flex-column mux-docs-sub">
+              <li><a class="nav-link" href="#what">What Muxarr does</a></li>
+              <li><a class="nav-link" href="#install">Install and first run</a></li>
+              <li><a class="nav-link" href="#first-profile">Your first profile</a></li>
+              <li><a class="nav-link" href="#loop">Scan, preview, convert</a></li>
+              <li><a class="nav-link" href="#safety">How a conversion stays safe</a></li>
+              <li><a class="nav-link" href="#next">Where to go next</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="profiles.html">Profiles</a></li>
+          <li class="nav-item"><a class="nav-link" href="library.html">Library and conversions</a></li>
+          <li class="nav-item"><a class="nav-link" href="integrations.html">Sonarr, Radarr and notifications</a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ and troubleshooting</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="col-lg-9 mux-docs-body">
+      <h1>Getting started</h1>
+      <p class="mux-lead">
+        Muxarr goes through your movies and shows and takes out the audio and subtitle tracks you will
+        never play. It also tidies up track names and flags. Nothing is re-encoded, so it is fast and
+        there is no quality loss. This page gets you from install to your first cleaned-up file.
+      </p>
+
+      <h2 id="what">What Muxarr does</h2>
+      <p>
+        A typical release comes with more than you need: a French dub, a commentary track, Spanish
+        subtitles, a second English subtitle for deaf and hard-of-hearing viewers (SDH). Every extra track costs disk space and clutters
+        your player's menus. You tell Muxarr which languages you actually watch and read, and it keeps
+        those and drops the rest.
+      </p>
+      <p>Along the way it can also:</p>
+      <ul>
+        <li>Give tracks clean, consistent names ("English 5.1" instead of "DTS-HD MA 5.1 @ 1509kbps [RelEaSeGroup-RRR]").</li>
+        <li>Fix default and forced flags so your player picks the right track without asking.</li>
+        <li>Put tracks in the order you prefer.</li>
+        <li>Clear leftover release-group text from the file title, and remove chapters if you want.</li>
+      </ul>
+      <p>
+        Muxarr calls this a conversion, but nothing is re-encoded. The video and audio are copied
+        as they are into a new file, minus the tracks you dropped. That keeps the quality identical
+        and makes it fast, usually a minute or two for a big film, even on a NAS or a Raspberry&nbsp;Pi.
+        When an MKV only needs new names or flags, Muxarr edits the file in place and it is done in
+        a second. Under the hood that is mkvmerge and mkvpropedit for MKV, ffmpeg for MP4.
+      </p>
+      <div class="alert alert-secondary" role="alert">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>What Muxarr never does:</strong> it never renames, moves or deletes your files, and
+        it never re-encodes video or audio. Renaming stays with Sonarr and Radarr. Muxarr only
+        changes the tracks and metadata inside each media file.
+      </div>
+
+      <h2 id="install">Install and first run</h2>
+      <p>
+        Muxarr runs as a Docker container. The <a href="../#setup">setup section on the home page</a>
+        has a ready-to-copy compose file. Two things matter: <code>/config</code> is where Muxarr
+        keeps its own database, and your media has to be mounted inside the container at some path
+        (<code>/media</code>, <code>/movies</code>, <code>/tv</code>, whatever you like).
+      </p>
+      <p>
+        Open <code>http://your-ip:8183</code> and a three-step wizard walks you through the basics.
+        Every step can be skipped and changed later under Settings.
+      </p>
+
+      <figure class="mux-shot mux-shot-narrow text-center">
+        <img src="../img/docs/setup-security.png" alt="Setup wizard, step 1: username and password" loading="lazy">
+        <figcaption class="mux-caption">Step 1 sets a username and password for the web UI. Skipping is allowed, but not recommended if anyone else can reach the address.</figcaption>
+      </figure>
+
+      <figure class="mux-shot mux-shot-narrow text-center">
+        <img src="../img/docs/setup-integrations.png" alt="Setup wizard, step 2: connect Sonarr and Radarr" loading="lazy">
+        <figcaption class="mux-caption">Step 2 connects Sonarr and Radarr. This is optional, but it is what tells Muxarr the original language of each film and lets new downloads be processed automatically. See <a href="integrations.html">Sonarr, Radarr and notifications</a>.</figcaption>
+      </figure>
+
+      <figure class="mux-shot mux-shot-narrow text-center">
+        <img src="../img/docs/setup-profiles.png" alt="Setup wizard, step 3: create your first profile" loading="lazy">
+        <figcaption class="mux-caption">Step 3 hands you over to the profile editor.</figcaption>
+      </figure>
+
+      <h2 id="first-profile">Your first profile</h2>
+      <p>
+        A <strong>profile</strong> is a set of rules plus the folders they apply to. Most people start
+        with one profile for everything and split later (movies versus TV, or anime with its own
+        language rules). A file follows the profile whose directory it lives in.
+      </p>
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <strong>Still seeding the torrents Sonarr or Radarr imported?</strong> Turn on
+        <span class="mux-ui">Skip hardlinked files</span> on the General tab. Those imports are usually
+        hardlinks (the download and the library file share the same data on disk), and touching the
+        library copy either edits the seeding copy too or doubles the space the file takes. Muxarr
+        then leaves such files out until only one link remains. See
+        <a href="faq.html#hardlinks">hardlinks and seeding</a>.
+      </div>
+      <p>For a first profile:</p>
+      <ol>
+        <li>Give it a name and add the folder(s) with your media, using the folder picker. These are
+          the paths as Muxarr sees them inside the container (<code>/media/movies</code>, not the path
+          on your host).</li>
+        <li>On the <span class="mux-ui">Audio</span> tab, switch on <span class="mux-ui">Remove unwanted audio tracks</span>.
+          Muxarr adds <span class="mux-ui">Original Language</span> for you: with Sonarr or Radarr connected,
+          that row keeps a foreign film's real soundtrack whatever language it is. Add the language you
+          watch dubs in, if any. Switching on <span class="mux-ui">Remove commentary audio tracks</span>
+          is a safe bet.</li>
+        <li>On the <span class="mux-ui">Subtitles</span> tab, do the same with the languages you read.
+          <span class="mux-ui">Remove SDH subtitle tracks</span> drops the hard-of-hearing version when
+          a regular one exists.</li>
+        <li>Click <span class="mux-ui">Save Settings &amp; Scan</span>.</li>
+      </ol>
+      <figure class="mux-shot">
+        <img src="../img/docs/profile-audio.png" alt="The Audio tab of the profile editor" loading="lazy">
+        <figcaption class="mux-caption">The Audio tab. Original Language first, then English, commentary removed, tracks renamed to a clean template.</figcaption>
+      </figure>
+      <div class="alert alert-secondary" role="alert">
+        <i class="bi bi-lightbulb me-1"></i>
+        <strong>Two small buttons on every language row do a lot.</strong>
+        <i class="bi bi-arrow-return-right"></i> turns a language into a <em>fallback</em>: kept only when
+        the language above it is missing ("German subtitles, English if there are none").
+        <i class="bi bi-gear"></i> opens <em>per-language settings</em>: how many tracks of that language to
+        keep and which one counts as best. Both are explained in <a href="profiles.html#fallback">Profiles</a>.
+      </div>
+      <p>
+        One more thing before you convert anything in bulk: open a handful of files, including a
+        foreign-language one, and look at the preview. A scan is harmless; a conversion rewrites the
+        file. If a film's <span class="mux-ui">Original Language</span> shows "-" on its details page, Muxarr
+        did not get it from Sonarr or Radarr and cannot protect that soundtrack yet.
+      </p>
+
+      <h2 id="loop">Scan, preview, convert</h2>
+      <p>The day-to-day rhythm is always the same:</p>
+      <ol>
+        <li><strong>Scan.</strong> Muxarr reads every file's tracks. Nothing is changed by a scan.</li>
+        <li><strong>Look.</strong> The Library lists every file with its tracks. Open one and the
+          <span class="mux-ui">Preview changes</span> switch shows exactly what the profile would do:
+          which tracks go, which get renamed, which flags change.</li>
+        <li><strong>Queue.</strong> Happy with it? Queue the file, or select many at once and queue
+          them together.</li>
+        <li><strong>Convert.</strong> The Conversions page shows progress, and afterwards the size saved
+          and the tracks before and after. Nothing is re-encoded here, "convert" just means the file
+          is rewritten with the tracks you chose.</li>
+      </ol>
+      <figure class="mux-shot">
+        <img src="../img/docs/library.png" alt="The Library page listing files with their audio and subtitle tracks" loading="lazy">
+        <figcaption class="mux-caption">The Library. Blue badges are audio, yellow are subtitles. Small icons mark commentary, dubs, SDH and forced tracks.</figcaption>
+      </figure>
+      <figure class="mux-shot">
+        <img src="../img/docs/file-details.png" alt="File details with the preview of planned changes" loading="lazy">
+        <figcaption class="mux-caption">A file's details with preview on. Struck-through text is what goes away, blue text is the new value, and grey rows will be removed.</figcaption>
+      </figure>
+      <p>
+        With Sonarr and Radarr connected you rarely queue by hand: they tell Muxarr when a file has
+        been imported, Muxarr waits a minute so tools like Bazarr can finish, then scans and queues it.
+        See <a href="integrations.html#webhook-flow">how the webhook flow works</a>.
+      </p>
+      <p>
+        To have Plex, Emby or Jellyfin pick up the changed file, add it under
+        <span class="mux-ui">Settings &rsaquo; Notifications</span> with the <span class="mux-ui">Completed</span>
+        trigger; see <a href="integrations.html#media-servers">media server refreshes</a>.
+      </p>
+
+      <h2 id="safety">How a conversion stays safe</h2>
+      <p>When a file has to be rewritten, Muxarr goes about it carefully, in this order:</p>
+      <ol>
+        <li>The new file is written next to the original as a temporary file. The original is not
+          touched. This means you need free space for one extra copy of the largest file you are
+          converting.</li>
+        <li>The temporary file is probed again and checked against the plan: the right tracks, the
+          right flags, a sane duration. If anything is off, the conversion fails and the original stays
+          exactly as it was.</li>
+        <li>Only then are the files swapped: the original is renamed to <code>.muxbak</code>, the new file
+          takes its place, and the backup is deleted. If the swap itself fails halfway, the backup is
+          put back.</li>
+      </ol>
+      <p>
+        If Muxarr is stopped at a bad moment, it cleans up on the next start: leftover temporary files
+        are removed and any <code>.muxbak</code> whose original is missing is restored.
+      </p>
+      <p>
+        When an MKV only needs new names, flags, a cleared title or its chapters removed, there is no
+        rewrite and no swap: the metadata is edited in place. Muxarr rescans the file afterwards to
+        confirm everything stuck, and falls back to a full rewrite if it did not.
+      </p>
+
+      <h2 id="next">Where to go next</h2>
+      <ul>
+        <li><a href="profiles.html">Profiles</a>: every setting, what it does, and a few ready-made recipes.</li>
+        <li><a href="library.html">Library and conversions</a>: filters, bulk actions, batch editing, custom conversions.</li>
+        <li><a href="integrations.html">Sonarr, Radarr and notifications</a>: automation, media server refreshes, post-processing.</li>
+        <li><a href="faq.html">FAQ and troubleshooting</a>: the questions that come up most.</li>
+      </ul>
+
+      <div class="mux-docs-pager d-flex justify-content-end">
+        <a href="profiles.html"><small>Next</small>Profiles <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

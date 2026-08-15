@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profiles | Muxarr docs</title>
+<meta name="description" content="Every setting in a Muxarr profile explained: language priority, Original Language, fallback languages, per-language track limits, commentary and SDH rules, default track, track order and track name templates.">
+<meta name="theme-color" content="#0d0d1a">
+<link rel="canonical" href="https://muxarr.app/docs/profiles.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Muxarr">
+<meta property="og:title" content="Profiles | Muxarr docs">
+<meta property="og:description" content="Every setting in a Muxarr profile explained, with recipes for common setups.">
+<meta property="og:url" content="https://muxarr.app/docs/profiles.html">
+<meta property="og:image" content="https://muxarr.app/img/og.png">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="../css/site.css" rel="stylesheet">
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', stored || system);
+  })();
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../">
+      <img src="../img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 order-lg-last ms-lg-3">
+      <button class="btn btn-sm mux-theme-btn" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="../"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="../#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link active" href="./"><i class="bi bi-book"></i> Docs</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mux-docs">
+  <div class="row g-5">
+
+    <aside class="col-lg-3">
+      <nav class="mux-docs-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="./">Getting started</a></li>
+          <li class="nav-item"><a class="nav-link active" href="profiles.html">Profiles</a>
+            <ul class="nav flex-column mux-docs-sub">
+              <li><a class="nav-link" href="#basics">How profiles work</a></li>
+              <li><a class="nav-link" href="#recipes">Common setups</a></li>
+              <li><a class="nav-link" href="#general">General</a></li>
+              <li><a class="nav-link" href="#video">Video</a></li>
+              <li><a class="nav-link" href="#languages">Which languages to keep</a></li>
+              <li><a class="nav-link" href="#original">Original Language</a></li>
+              <li><a class="nav-link" href="#fallback">Fallback languages</a></li>
+              <li><a class="nav-link" href="#per-language">Per-language settings</a></li>
+              <li><a class="nav-link" href="#variants">Regional variants</a></li>
+              <li><a class="nav-link" href="#extras">Commentary, SDH, codecs</a></li>
+              <li><a class="nav-link" href="#default-order">Default track and order</a></li>
+              <li><a class="nav-link" href="#names">Track names</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="library.html">Library and conversions</a></li>
+          <li class="nav-item"><a class="nav-link" href="integrations.html">Sonarr, Radarr and notifications</a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ and troubleshooting</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="col-lg-9 mux-docs-body">
+      <h1>Profiles</h1>
+      <p class="mux-lead">
+        A profile is the set of rules Muxarr applies to the files in one or more folders. This page
+        starts with a few ready-made setups and then walks through every setting in the profile
+        editor, tab by tab.
+      </p>
+
+      <h2 id="basics">How profiles work</h2>
+      <p>
+        You find profiles under <span class="mux-ui">Settings &rsaquo; Profiles</span>. Each card shows the
+        folders it covers and a one-line summary of its audio and subtitle rules, so you can tell them
+        apart at a glance. From here you can edit, clone or delete a profile, or jump to its files in
+        the Library.
+      </p>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-profiles.png" alt="The Profiles tab in Settings, listing two profiles with their rules" loading="lazy">
+        <figcaption class="mux-caption">Two profiles: one for movies, one for TV. Green badges are languages that are always kept, grey ones with the <i class="bi bi-arrow-return-right"></i> icon are fallbacks.</figcaption>
+      </figure>
+      <p>
+        A file belongs to the profile whose folder it sits in, so keep folders from overlapping:
+        profiles for <code>/media</code> and <code>/media/anime</code> would both match an anime file and
+        only one of them can win. Use sibling folders instead, such as <code>/media/movies</code>,
+        <code>/media/tv</code> and <code>/media/anime</code>. When you queue a file from its details page
+        you can pick a different profile as a one-time override without changing anything permanently.
+      </p>
+      <p>
+        Both save buttons do the same thing to your settings; <span class="mux-ui">Save Settings &amp; Scan</span>
+        also starts a library scan right away so the Library reflects the new rules.
+      </p>
+
+      <h2 id="recipes">Common setups</h2>
+      <p>Five profiles people actually run. Each one is a couple of clicks; the sections after this explain every knob.</p>
+      <h3>English speaker, keep the original soundtrack of foreign films</h3>
+      <ul>
+        <li>Audio: <span class="mux-ui">Original Language</span>, then <span class="mux-ui">English</span>. Remove commentary. Default track: Spec compliant.</li>
+        <li>Subtitles: <span class="mux-ui">English</span>. Remove SDH.</li>
+        <li>Connect Radarr and Sonarr so Original Language resolves.</li>
+      </ul>
+      <h3>German subtitles, English if there are none</h3>
+      <ul>
+        <li>Subtitles: <span class="mux-ui">German</span>, then <span class="mux-ui">English</span> with its <i class="bi bi-arrow-return-right"></i> fallback button switched on. See <a href="#fallback">Fallback languages</a>.</li>
+      </ul>
+      <h3>Anime: Japanese audio, English subs, drop the dub</h3>
+      <ul>
+        <li>A separate profile pointed at your anime folder.</li>
+        <li>Audio: <span class="mux-ui">Japanese</span> only. Subtitles: <span class="mux-ui">English</span>, with per-language <span class="mux-ui">Max tracks: 2</span> (the <i class="bi bi-gear"></i> button on the row) if you want to keep the "signs and songs" track next to the full one.</li>
+      </ul>
+      <h3>Smallest files</h3>
+      <ul>
+        <li>Audio: your language with <span class="mux-ui">Max tracks: 1</span> and <span class="mux-ui">Smallest size</span>. Remove commentary and audio description.</li>
+        <li>Subtitles: your language, then turn on <span class="mux-ui">Exclude subtitle codecs</span> and pick PGS and VobSub (the picture-based formats from discs). Turn on <span class="mux-ui">Remove SDH subtitle tracks</span>.</li>
+      </ul>
+      <h3>Only tidy names and flags, remove nothing</h3>
+      <ul>
+        <li>Leave <span class="mux-ui">Remove unwanted audio tracks</span> and <span class="mux-ui">Remove unwanted subtitle tracks</span> off.</li>
+        <li>Switch on <span class="mux-ui">Standardize audio track names</span> and <span class="mux-ui">Standardize subtitle track names</span>, set <span class="mux-ui">Default track</span> to <span class="mux-ui">Spec compliant</span>, and on the General tab turn on <span class="mux-ui">Clear file title</span>. On MKV these are metadata-only changes and take a second per file.</li>
+      </ul>
+
+
+      <h2 id="general">General</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/profile-general.png" alt="The General tab of the profile editor" loading="lazy">
+      </figure>
+      <dl class="row">
+        <dt class="col-sm-3">Monitored Directories</dt>
+        <dd class="col-sm-9">The folders this profile scans and manages, as paths inside the Muxarr container. If Docker maps <code>/srv/media/movies</code> on your host to <code>/movies</code> in the container, pick <code>/movies</code>. The folder button lets you browse. Add as many folders as should follow the same rules.</dd>
+        <dt class="col-sm-3">Skip hardlinked files</dt>
+        <dd class="col-sm-9">Leave files with more than one hard link out of scans and conversions. Use it when your download client is still seeding what Sonarr or Radarr imported; see <a href="faq.html#hardlinks">hardlinks and seeding</a>. With this off, hardlinked files are scanned like any other and show a <i class="bi bi-link-45deg"></i> icon in the Library.</dd>
+        <dt class="col-sm-3">Clear file title</dt>
+        <dd class="col-sm-9">Remove the container title, which is usually the release name (<code>The.Matrix.1999.1080p.BluRay.x264-SPARKS</code>) and shows up in some players instead of the movie's name.</dd>
+        <dt class="col-sm-3">Remove chapters</dt>
+        <dd class="col-sm-9">Strip chapter markers.</dd>
+      </dl>
+
+      <h2 id="video">Video</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/profile-video.png" alt="The Video tab of the profile editor" loading="lazy">
+      </figure>
+      <dl class="row">
+        <dt class="col-sm-3">Clear video track names</dt>
+        <dd class="col-sm-9">Removes release-group text and codec dumps from the video track's name.</dd>
+        <dt class="col-sm-3">Trim all tracks to video length</dt>
+        <dd class="col-sm-9">For the rare file where an audio or subtitle track runs on past the end of the video and makes the whole file look longer than it is. This cuts real content, so leave it off unless you have such files. It only applies when the file is being converted anyway; it never triggers a conversion on its own.</dd>
+      </dl>
+
+      <h2 id="languages">Which languages to keep</h2>
+      <p>
+        The <span class="mux-ui">Audio</span> and <span class="mux-ui">Subtitles</span> tabs have the same
+        controls, one set for each kind of track. Switch on <span class="mux-ui">Remove unwanted audio tracks</span>
+        (or subtitle tracks) and a language list appears. Type to add languages, drag the handle to
+        change their order.
+      </p>
+      <p>The list does three jobs at once:</p>
+      <ul>
+        <li>Tracks in a language that is not on the list are removed (with the exceptions below: the audio safety net, Original Language and fallbacks).</li>
+        <li>The order is a <strong>priority</strong>: it decides which track becomes the default and, if you ask for it, the order of the tracks in the file.</li>
+        <li>Each row can carry its own settings, such as "keep only the best track of this language".</li>
+      </ul>
+      <div class="alert alert-secondary" role="alert">
+        <i class="bi bi-lightbulb me-1"></i>
+        <strong>Every row has two small buttons that are easy to miss.</strong>
+        <i class="bi bi-arrow-return-right"></i> makes the language a <a href="#fallback">fallback</a>, kept only when
+        the language above it is missing. <i class="bi bi-gear"></i> opens <a href="#per-language">per-language
+        settings</a>: how many tracks to keep and which one counts as best. Between them they cover most
+        "I want X, but..." situations.
+      </div>
+      <p>
+        One safety net: Muxarr never leaves a file without audio. If none of the languages on your list
+        is present, it keeps one remaining audio track rather than produce a silent file. That is a last
+        resort, not a choice, so it may well be a dub. When a language you expected is missing, check
+        the preview before converting. Subtitles can go to zero, that is fine.
+      </p>
+      <p>
+        Untagged tracks are their own case. A file with just one audio track and no language tag is
+        almost always the original, so <span class="mux-ui">Assume undetermined language is original language</span>
+        (on by default for audio) treats it that way, provided Sonarr or Radarr told Muxarr what the
+        original language is. If you would rather always keep untagged tracks, add
+        <span class="mux-ui">Undetermined</span> to the list.
+      </p>
+
+      <h2 id="original">Original Language</h2>
+      <p>
+        <span class="mux-ui">Original Language</span> is a wildcard row rather than a real language. For each
+        file it stands for the language that film or show was made in, so an English profile still
+        keeps the Japanese track of an anime and the French track of Amélie. It is the reason most
+        people connect Sonarr and Radarr: that is where the original language comes from. Without them,
+        the row matches nothing.
+      </p>
+      <p>
+        You can see what Muxarr knows on a file's details page, in the <span class="mux-ui">Original Language</span>
+        row. Sonarr and Radarr are polled once a day and their webhook also delivers it instantly for
+        new imports.
+      </p>
+
+      <h2 id="fallback">Fallback languages</h2>
+      <p>
+        Sometimes a language is only wanted as a stand-in. "Give me German subtitles, but if the file
+        has none, English will do." Listing both would keep both. Instead, click the
+        <i class="bi bi-arrow-return-right"></i> button on the English row to make it a
+        <strong>fallback</strong> for the language above it.
+      </p>
+      <figure class="mux-shot mux-shot-narrow">
+        <img src="../img/docs/language-editor-fallback.png" alt="A subtitle language list with English as a fallback under Dutch" loading="lazy">
+        <figcaption class="mux-caption">Dutch first. English hangs under it and is only kept when the file has no Dutch. Original Language is kept regardless.</figcaption>
+      </figure>
+      <p>The rules, in the order you will meet them:</p>
+      <ul>
+        <li>A language and the fallbacks under it form a group, and only the highest one the file actually has is kept. You can chain them: German, then Dutch as a fallback, then English as a fallback below that.</li>
+        <li>Commentary tracks and forced subtitles do not count as "having" a language. German commentary alone will not stop the English fallback from being kept, and neither will a German forced-only subtitle.</li>
+        <li>A language that is kept for another reason stays. If Original Language is also on your list and the film happens to be in English, the English track is kept even though the English row is a fallback that lost out.</li>
+      </ul>
+      <p>
+        Two smaller details: SDH and audio-description tracks do count as the language being present,
+        unless the profile removes them; and when you drag a language, its fallbacks move with it, so
+        a group never gets split by accident.
+      </p>
+
+      <h2 id="per-language">Per-language settings</h2>
+      <p>
+        The <i class="bi bi-gear"></i> button on a language row opens settings for that language only.
+        The icon fills in when something is set, so you can see at a glance which rows carry overrides.
+      </p>
+      <figure class="mux-shot mux-shot-narrow">
+        <img src="../img/docs/language-editor-settings.png" alt="Per-language settings opened for English: max tracks and quality preference" loading="lazy">
+        <figcaption class="mux-caption">English limited to its single best track, choosing lossless first.</figcaption>
+      </figure>
+      <dl class="row">
+        <dt class="col-sm-3">Max tracks</dt>
+        <dd class="col-sm-9">How many tracks of this language to keep: all (default), or the best 1, 2 or 3. This is how you get rid of the stereo AAC copy that ships next to the 5.1 track. Some files carry that stereo track on purpose, for older devices, so glance at the preview of a few files before you apply a limit to a whole library.</dd>
+        <dt class="col-sm-3">Quality preference (audio)</dt>
+        <dd class="col-sm-9">Which tracks count as "best" when limiting.
+          <span class="mux-ui">Lossless first</span> keeps TrueHD, DTS-HD and FLAC over lossy formats, with channel count only as tiebreak, so a stereo FLAC beats a 5.1 AC-3.
+          <span class="mux-ui">Most channels</span> puts surround above everything and never drops a 5.1 in favour of a stereo track; pick this when surround matters more to you than lossless.
+          <span class="mux-ui">Smallest size</span> does the opposite: lossy over lossless, fewer channels over more, for compact files.
+          Commentary always ranks last.</dd>
+        <dt class="col-sm-3">Subtitle preference (subtitles)</dt>
+        <dd class="col-sm-9"><span class="mux-ui">Text first</span> prefers text subtitles such as SRT and ASS: small, and most players can resize and restyle them.
+          <span class="mux-ui">Image first</span> prefers PGS and VobSub, the picture-based subtitles from discs, which look exactly as the studio made them.
+          <span class="mux-ui">Accessibility</span> keeps SDH above all else.</dd>
+      </dl>
+
+      <h2 id="variants">Regional variants</h2>
+      <p>
+        Muxarr knows the variants that actually show up in releases: French (Canada), French (France),
+        French (Belgium), Spanish (Spain), Spanish (Latin America), Portuguese (Brazil), Portuguese
+        (Portugal), Chinese (Traditional, Simplified, Hong Kong, Bilingual), Mandarin, Cantonese and
+        Flemish. It reads them from the language tag when a release has a proper one (<code>fr-CA</code>,
+        <code>pt-BR</code>) and from the track name when it does not: "VFQ", "Truefrench", "Latino",
+        "Castellano", "Brasileiro" and so on are all recognised.
+      </p>
+      <p>The rule is simple:</p>
+      <ul>
+        <li>Listing the plain language, say <span class="mux-ui">French</span>, keeps every French track, whatever region.</li>
+        <li>Listing a variant, say <span class="mux-ui">French (Canada)</span>, keeps Quebec French plus French tracks that name no region, and drops tracks identified as another region (VFF, Truefrench). The editor shows a note reminding you of this.</li>
+        <li>Two variants never cover each other, so <span class="mux-ui">French (Canada)</span> plus a
+          <span class="mux-ui">French (France)</span> fallback is a clean way to say "Quebec if there is one, otherwise France".</li>
+      </ul>
+
+      <h2 id="extras">Commentary, SDH and codecs</h2>
+      <dl class="row">
+        <dt class="col-sm-3">Remove commentary audio tracks, Remove commentary subtitle tracks</dt>
+        <dd class="col-sm-9">Drops director's and cast commentary. If commentary is all a language has, it stays: removing it would leave that language with nothing.</dd>
+        <dt class="col-sm-3">Remove SDH subtitle tracks</dt>
+        <dd class="col-sm-9">Drops the subtitles for deaf and hard-of-hearing viewers when a regular subtitle in the same language exists. A forced subtitle does not count as a regular one, since it only covers foreign dialogue and signs.</dd>
+        <dt class="col-sm-3">Remove audio description tracks</dt>
+        <dd class="col-sm-9">The audio equivalent: drops narrated tracks for blind and low-vision viewers, unless they are the only option.</dd>
+        <dt class="col-sm-3">Exclude subtitle codecs</dt>
+        <dd class="col-sm-9">Removes subtitle tracks of specific formats regardless of language. The usual reason is dropping picture-based PGS and VobSub in favour of text subtitles. Mind that a language with only a PGS track then ends up with no subtitles at all; the preview shows you when that happens.</dd>
+      </dl>
+      <p>
+        These rules run inside each language, after the language list has done its work. If a rule
+        empties a language out entirely (a French track that is PGS-only when PGS is excluded), Muxarr
+        treats that language as absent, so a fallback below it still gets its turn.
+      </p>
+
+      <h2 id="default-order">Default track and track order</h2>
+      <p>These two work with or without track removal.</p>
+      <h3>Default track</h3>
+      <ul>
+        <li><span class="mux-ui">Don't change</span> keeps whatever the file has.</li>
+        <li><span class="mux-ui">Spec compliant</span> is the cautious choice: it only makes sure commentary, accessibility and dub tracks are not marked default, and your player picks among the rest using its own language settings.</li>
+        <li><span class="mux-ui">Always prefer first language</span> marks the best track of your top-priority language as the default. Meant for players and TVs that have no language preference of their own.</li>
+      </ul>
+      <h3>Track order</h3>
+      <ul>
+        <li><span class="mux-ui">Don't reorder</span> leaves the file order alone.</li>
+        <li><span class="mux-ui">Alphabetical by language</span> and <span class="mux-ui">Match language priority</span> physically reorder the tracks. Both keep the file's own order within a language, so a "forced, then regular" subtitle layout does not flip. Reordering means the file has to be rewritten (a remux, still without re-encoding), so a file whose only change is its track order still gets rewritten.</li>
+      </ul>
+
+      <h2 id="names">Track names</h2>
+      <p>
+        Release groups put anything in track names: codec dumps, bitrates, their own tag. Switch on
+        <span class="mux-ui">Standardize audio track names</span> (or subtitle track names) and Muxarr renames
+        every track from a template. The defaults, <code>{language} {channels} {dub}</code> for audio
+        and <code>{language} {dub}</code> for subtitles, turn "DTS-HD MA 5.1 @ 1509kbps" into
+        "English 5.1" and "English (Dub)" into "English Dub".
+      </p>
+      <p>The preview under the template updates live as you type. Placeholders:</p>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead><tr><th>Placeholder</th><th>Becomes</th></tr></thead>
+          <tbody>
+            <tr><td><code>{language}</code></td><td>Full language name, "English"</td></tr>
+            <tr><td><code>{nativelanguage}</code></td><td>Native name, "Français"</td></tr>
+            <tr><td><code>{code}</code></td><td>Short code in capitals, "EN"</td></tr>
+            <tr><td><code>{lang}</code></td><td>The raw language code from the track</td></tr>
+            <tr><td><code>{codec}</code></td><td>Codec name, "E-AC-3"</td></tr>
+            <tr><td><code>{channels}</code></td><td>Audio only: "2.0", "5.1", "7.1"</td></tr>
+            <tr><td><code>{trackname}</code></td><td>The name the track has now</td></tr>
+            <tr><td><code>{hi}</code>, <code>{forced}</code>, <code>{commentary}</code>, <code>{visualimpaired}</code>, <code>{original}</code>, <code>{dub}</code></td><td>"SDH", "Forced", "Commentary", "AD", "Original", "Dub" when the flag applies, otherwise nothing</td></tr>
+            <tr><td><code>{flags}</code></td><td>All applicable labels at once, comma separated</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Leave the template empty to clear all names. Under <span class="mux-ui">Flag-specific overrides</span>
+        you can give SDH, forced, commentary, AD and dub tracks a template of their own; the first
+        matching flag wins.
+      </p>
+      <div class="alert alert-secondary" role="alert">
+        <i class="bi bi-info-circle me-1"></i>
+        MKV has no "dub" flag of its own, so Muxarr keeps track of dubs through the word "Dub" in the
+        track name. Keep <code>{dub}</code> or <code>{flags}</code> in your template, or a dub-specific
+        override, or that information is lost after a remux. The editor warns you when it is missing.
+      </div>
+
+      <div class="mux-docs-pager d-flex justify-content-between">
+        <a href="./"><small>Previous</small><i class="bi bi-arrow-left"></i> Getting started</a>
+        <a href="library.html" class="text-end"><small>Next</small>Library and conversions <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

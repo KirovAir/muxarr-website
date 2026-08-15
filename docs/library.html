@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library and conversions | Muxarr docs</title>
+<meta name="description" content="Working with Muxarr day to day: scanning, filtering and selecting files in the Library, reading the change preview, batch editing tracks, custom conversions, and following the conversion queue.">
+<meta name="theme-color" content="#0d0d1a">
+<link rel="canonical" href="https://muxarr.app/docs/library.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Muxarr">
+<meta property="og:title" content="Library and conversions | Muxarr docs">
+<meta property="og:description" content="Scanning, filtering, previewing changes, batch editing and following the conversion queue.">
+<meta property="og:url" content="https://muxarr.app/docs/library.html">
+<meta property="og:image" content="https://muxarr.app/img/og.png">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="../css/site.css" rel="stylesheet">
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', stored || system);
+  })();
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../">
+      <img src="../img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 order-lg-last ms-lg-3">
+      <button class="btn btn-sm mux-theme-btn" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="../"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="../#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link active" href="./"><i class="bi bi-book"></i> Docs</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mux-docs">
+  <div class="row g-5">
+
+    <aside class="col-lg-3">
+      <nav class="mux-docs-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="./">Getting started</a></li>
+          <li class="nav-item"><a class="nav-link" href="profiles.html">Profiles</a></li>
+          <li class="nav-item"><a class="nav-link active" href="library.html">Library and conversions</a>
+            <ul class="nav flex-column mux-docs-sub">
+              <li><a class="nav-link" href="#dashboard">Dashboard</a></li>
+              <li><a class="nav-link" href="#scanning">Scanning</a></li>
+              <li><a class="nav-link" href="#library">The Library</a></li>
+              <li><a class="nav-link" href="#selecting">Selecting and queueing</a></li>
+              <li><a class="nav-link" href="#details">File details and preview</a></li>
+              <li><a class="nav-link" href="#custom">Custom conversion</a></li>
+              <li><a class="nav-link" href="#batch">Batch track edit</a></li>
+              <li><a class="nav-link" href="#conversions">Conversions</a></li>
+              <li><a class="nav-link" href="#statistics">Statistics and logs</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="integrations.html">Sonarr, Radarr and notifications</a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ and troubleshooting</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="col-lg-9 mux-docs-body">
+      <h1>Library and conversions</h1>
+      <p class="mux-lead">
+        Profiles say what should happen; these pages are where you watch it happen and step in when
+        you want something different for a particular file.
+      </p>
+
+      <h2 id="dashboard">Dashboard</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/dashboard.png" alt="The Muxarr dashboard with counters and the latest conversions and files" loading="lazy">
+      </figure>
+      <p>
+        The six counters at the top are shortcuts. <span class="mux-ui">Redundant Tracks</span> opens the
+        Library filtered to files that still have tracks your profile would remove;
+        <span class="mux-ui">Metadata Issues</span> to files whose names, flags, title or chapters differ from
+        what the profile wants. <span class="mux-ui">Space Saved</span> adds up every completed conversion.
+        When a conversion is running, a progress card appears here too.
+      </p>
+
+      <h2 id="scanning">Scanning</h2>
+      <p>
+        A scan reads each file's tracks with ffprobe and mkvmerge and works out what the profile would
+        change. It never modifies anything. The three buttons at the top right of the Library:
+      </p>
+      <dl class="row">
+        <dt class="col-sm-3">Refresh</dt>
+        <dd class="col-sm-9">Picks up new and changed files. Files that have not changed since the last scan are skipped, so this is quick.</dd>
+        <dt class="col-sm-3">Force</dt>
+        <dd class="col-sm-9">Re-reads every file from disk. Use it when files were edited outside Muxarr. A changed profile does not need it: <span class="mux-ui">Refresh</span> (or <span class="mux-ui">Save Settings &amp; Scan</span>) re-evaluates every file against the new rules.</dd>
+        <dt class="col-sm-3">Clear</dt>
+        <dd class="col-sm-9">Forgets everything Muxarr knows about the library and scans from scratch. Your files on disk are not touched. Handy after moving folders around.</dd>
+      </dl>
+      <p>
+        You can also let Muxarr scan on a schedule (<span class="mux-ui">Settings &rsaquo; Processing &rsaquo; Scan interval</span>).
+        With Sonarr and Radarr webhooks in place that is rarely needed, since new files announce themselves.
+      </p>
+
+      <h2 id="library">The Library</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/library-advanced.png" alt="The Library with the advanced filter row open" loading="lazy">
+        <figcaption class="mux-caption">Advanced filters narrow the list down by codec, resolution, language, container and more.</figcaption>
+      </figure>
+      <p>Each row shows the file, its size, when it was created and its tracks. Blue badges are audio,
+        yellow are subtitles. Small icons on a badge tell you more:</p>
+      <ul>
+        <li><i class="bi bi-chat-quote"></i> commentary</li>
+        <li><i class="bi bi-ear"></i> hearing impaired (SDH)</li>
+        <li><i class="bi bi-lock"></i> forced: a short subtitle track for foreign dialogue and signs, meant to show even with subtitles off</li>
+        <li><i class="bi bi-translate"></i> dubbed</li>
+        <li><i class="bi bi-link-45deg"></i> next to a name: the file is hardlinked, meaning another path (usually a seeding download) shares the same data on disk. Only shown when the profile does not skip such files.</li>
+      </ul>
+      <p>
+        The search box matches file paths and titles. The <span class="mux-ui">All Files</span> dropdown has
+        the filters you will use most: <span class="mux-ui">Needs Track Removal</span>,
+        <span class="mux-ui">Needs Metadata Fix</span>, <span class="mux-ui">Needs Any Work</span> and
+        <span class="mux-ui">Has Scan Warning</span>. With more than one profile, a second dropdown filters by
+        profile. <span class="mux-ui">Advanced</span> opens a row of dropdowns for codecs, resolution,
+        channel layout, languages, container, bit depth and track structure ("no subtitles", "multiple
+        audio", and so on). Every filter is in the URL, so you can bookmark a view.
+      </p>
+
+      <h2 id="selecting">Selecting and queueing</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/library-selection.png" alt="Several files selected in the Library, with Queue and Batch edit buttons" loading="lazy">
+        <figcaption class="mux-caption">Selecting rows brings up the bulk actions.</figcaption>
+      </figure>
+      <p>
+        Tick files and two buttons appear: <span class="mux-ui">Queue N to conversion</span> and
+        <span class="mux-ui">Batch edit N</span>. Tick one row, then hold <kbd>Shift</kbd> and tick another
+        to select everything in between. The header checkbox selects the whole page. When a filter is
+        active you also get <span class="mux-ui">Queue all</span> and <span class="mux-ui">Batch edit all</span> for
+        every matching file, not just the visible page.
+      </p>
+      <p>
+        Queueing skips files that are already queued or running, files that are not reachable right
+        now (a mount that is offline), and hardlinked files when the profile skips those (normally
+        they are not in the Library at all, but a file can become hardlinked after it was scanned).
+        The toast tells you how many were skipped and why.
+      </p>
+
+      <h2 id="details">File details and preview</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/file-details.png" alt="File details with the preview of planned changes" loading="lazy">
+        <figcaption class="mux-caption">Inception with the Movies profile: title cleared, one audio track kept and renamed, Dutch subtitles first, the rest removed.</figcaption>
+      </figure>
+      <p>
+        Click a file to see what Muxarr knows about it and, more importantly, what it plans to do.
+        With <span class="mux-ui">Preview changes</span> on, the track table shows the result of applying the
+        selected profile:
+      </p>
+      <ul>
+        <li>Grey rows marked <em>will be removed</em> go away.</li>
+        <li>Struck-through text is the old value, the text after it is the new one (a renamed track, a cleared title).</li>
+        <li>Small badges such as <span class="badge text-bg-info">+Original</span> or <span class="badge text-bg-info">-SDH</span> show flags that change; a <i class="bi bi-arrow-down-up"></i> badge marks a track that moves.</li>
+        <li>A <i class="bi bi-star-fill text-warning"></i> marks the track that will be the default.</li>
+      </ul>
+      <p>
+        The <span class="mux-ui">Profile</span> dropdown lets you preview and queue with a different profile as
+        a one-time override; the file's assigned profile does not change. The buttons:
+      </p>
+      <dl class="row">
+        <dt class="col-sm-3">Add to Queue</dt>
+        <dd class="col-sm-9">Queue the file with the selected profile.</dd>
+        <dt class="col-sm-3">Custom Conversion</dt>
+        <dd class="col-sm-9">Decide track by track yourself, see below.</dd>
+        <dt class="col-sm-3">Analyze File</dt>
+        <dd class="col-sm-9">Re-read just this file from disk.</dd>
+      </dl>
+      <p>
+        Further down the page you find the file's recent conversions and the raw ffprobe output for
+        when you need to see exactly what is in the container.
+      </p>
+
+      <h2 id="custom">Custom conversion</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/custom-conversion.png" alt="The Custom Conversion dialog with tracks to keep, reorder and rename" loading="lazy">
+      </figure>
+      <p>
+        For the one file where the profile does not fit, <span class="mux-ui">Custom Conversion</span> lets
+        you hand-pick tracks: untick the ones to drop, drag them into order, change a language,
+        rename, and toggle default, forced, SDH, commentary and dub flags. <span class="mux-ui">Apply Profile</span>
+        fills the dialog from a profile so you only adjust what differs. At least one audio track
+        must stay. Whole-file options like clearing the title or removing chapters come from the
+        profile only.
+      </p>
+
+      <h2 id="batch">Batch track edit</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/batch-edit.png" alt="Batch Track Edit for three episodes, with a row per track position" loading="lazy">
+        <figcaption class="mux-caption">Three episodes edited together. Rows are track positions, so "Audio 1" is the first audio track of every file.</figcaption>
+      </figure>
+      <p>
+        Batch edit is for the mistakes releases make in bulk: a whole season where the second audio
+        track is tagged Undetermined but is really English, or subtitles named "sub" on every episode.
+        Select the files in the Library and choose <span class="mux-ui">Batch edit</span>.
+      </p>
+      <p>
+        Each row is a track position across all selected files. For every position you can set a
+        language, a track name (or clear it) and turn flags on or off; anything you leave alone is
+        not written. <span class="mux-ui">Apply To</span> limits an edit to files where that position holds a
+        particular language, which keeps you from relabelling the wrong track when files are not all
+        the same. The <span class="mux-ui">Files</span> list shows which files will change, and the
+        <span class="mux-ui">Preview</span> shows the before and after for whichever file you click. Only files
+        that actually change are queued.
+      </p>
+      <div class="alert alert-secondary" role="alert">
+        <i class="bi bi-info-circle me-1"></i>
+        Muxarr reads flags such as forced and SDH back from the track name on the next scan. If a
+        name still says "SDH", turning the flag off would not stick, so batch edit tells you to
+        change or clear the name as well.
+      </div>
+
+      <h2 id="conversions">Conversions</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/conversions.png" alt="The Conversions page with an active conversion and a queue" loading="lazy">
+      </figure>
+      <p>
+        The top card shows what is running and what is next. Conversions run one at a time.
+        <span class="mux-ui">Pause</span> finishes the current file and holds the rest;
+        <span class="mux-ui">Clear Queue</span> removes everything that has not started. Each queued row has
+        its own cancel button.
+      </p>
+      <p>
+        The table below is the history, filterable by state (New, Processing, Completed, Failed) and
+        searchable by file. Every row shows the size reduction and the tracks before and after.
+        Selecting rows lets you delete them from the history; that only removes the record, not the
+        file, but it does change the statistics.
+      </p>
+      <figure class="mux-shot">
+        <img src="../img/docs/conversion-details.png" alt="Details of a completed conversion with size before and after, tracks and the log" loading="lazy">
+        <figcaption class="mux-caption">A completed conversion. The log at the bottom is the full mkvmerge or ffmpeg output plus Muxarr's own validation and swap steps.</figcaption>
+      </figure>
+      <p>
+        Click a conversion for the details: sizes before and after, the track tables side by side and
+        the complete log. When something fails, the log is the place to look; the last line usually
+        says why.
+      </p>
+
+      <h2 id="statistics">Statistics and logs</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/statistics.png" alt="The Statistics page with distributions of languages, codecs and resolutions" loading="lazy">
+      </figure>
+      <p>
+        Statistics gives a breakdown of the whole library: audio and subtitle languages, codecs,
+        resolutions, channel layouts, containers and bit depth. Every bar is a link into the Library
+        with that filter applied, which makes it a good way to hunt down odd files ("which three files
+        still have VobSub subtitles?").
+      </p>
+      <p>
+        Logs shows what Muxarr has been doing, filterable by level and searchable. Errors come with
+        an expandable stack trace and a copy button, useful when reporting an issue.
+      </p>
+
+      <div class="mux-docs-pager d-flex justify-content-between">
+        <a href="profiles.html"><small>Previous</small><i class="bi bi-arrow-left"></i> Profiles</a>
+        <a href="integrations.html" class="text-end"><small>Next</small>Sonarr, Radarr and notifications <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

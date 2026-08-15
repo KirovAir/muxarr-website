@@ -316,3 +316,126 @@ section[id], header[id] {
         transform: none;
     }
 }
+
+/* ---- Docs ---- */
+
+.mux-docs {
+    padding: 2.5rem 0 4rem;
+}
+
+.mux-docs-nav {
+    position: sticky;
+    top: 5rem;
+    font-size: 0.9375rem;
+}
+
+.mux-docs-nav .nav-link {
+    color: var(--bs-body-color);
+    padding: 0.25rem 0.75rem;
+    border-left: 2px solid transparent;
+    border-radius: 0;
+}
+
+.mux-docs-nav .nav-link:hover {
+    color: var(--mux-orange);
+}
+
+.mux-docs-nav .nav-link.active {
+    color: var(--mux-orange);
+    border-left-color: var(--mux-orange);
+    font-weight: 600;
+}
+
+.mux-docs-nav .mux-docs-sub .nav-link {
+    padding-left: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--bs-secondary-color);
+}
+
+.mux-docs-nav .mux-docs-sub .nav-link:hover {
+    color: var(--mux-orange);
+}
+
+.mux-docs-body h1 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.mux-docs-body h2 {
+    margin-top: 3rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    font-weight: 600;
+}
+
+.mux-docs-body h3 {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.mux-docs-body h2[id], .mux-docs-body h3[id] {
+    scroll-margin-top: 5rem;
+}
+
+.mux-docs-body p, .mux-docs-body li {
+    line-height: 1.65;
+}
+
+.mux-docs-body .mux-lead {
+    font-size: 1.125rem;
+    color: var(--bs-secondary-color);
+}
+
+.mux-docs-body figure.mux-shot {
+    margin: 1.5rem 0 2rem;
+}
+
+.mux-docs-body figure.mux-shot img {
+    width: 100%;
+    height: auto;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+}
+
+[data-bs-theme="dark"] .mux-docs-body figure.mux-shot img {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4);
+}
+
+/* Cropped UI fragments should not stretch to the column */
+.mux-docs-body figure.mux-shot.mux-shot-narrow img {
+    width: auto;
+    max-width: 100%;
+}
+
+.mux-docs-body table {
+    font-size: 0.9375rem;
+}
+
+.mux-docs-body code {
+    font-size: 0.875em;
+}
+
+.mux-docs-body .table code {
+    white-space: nowrap;
+}
+
+/* Setting names as they appear in the app */
+.mux-ui {
+    font-weight: 600;
+}
+
+/* Docs pager at the bottom of each page */
+.mux-docs-pager {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bs-border-color);
+}
+
+.mux-docs-pager a {
+    text-decoration: none;
+}
+
+.mux-docs-pager small {
+    display: block;
+    color: var(--bs-secondary-color);
+}

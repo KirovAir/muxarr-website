@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonarr, Radarr and notifications | Muxarr docs</title>
+<meta name="description" content="Connect Muxarr to Sonarr and Radarr for original language detection and automatic processing, tell Plex, Emby or Jellyfin to refresh, send Discord or Telegram messages, and understand what post-processing does.">
+<meta name="theme-color" content="#0d0d1a">
+<link rel="canonical" href="https://muxarr.app/docs/integrations.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Muxarr">
+<meta property="og:title" content="Sonarr, Radarr and notifications | Muxarr docs">
+<meta property="og:description" content="Automation with Sonarr and Radarr, media server refreshes, chat notifications, post-processing, security and the API.">
+<meta property="og:url" content="https://muxarr.app/docs/integrations.html">
+<meta property="og:image" content="https://muxarr.app/img/og.png">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="../css/site.css" rel="stylesheet">
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', stored || system);
+  })();
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../">
+      <img src="../img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 order-lg-last ms-lg-3">
+      <button class="btn btn-sm mux-theme-btn" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="../"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="../#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link active" href="./"><i class="bi bi-book"></i> Docs</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mux-docs">
+  <div class="row g-5">
+
+    <aside class="col-lg-3">
+      <nav class="mux-docs-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="./">Getting started</a></li>
+          <li class="nav-item"><a class="nav-link" href="profiles.html">Profiles</a></li>
+          <li class="nav-item"><a class="nav-link" href="library.html">Library and conversions</a></li>
+          <li class="nav-item"><a class="nav-link active" href="integrations.html">Sonarr, Radarr and notifications</a>
+            <ul class="nav flex-column mux-docs-sub">
+              <li><a class="nav-link" href="#why">Why connect Sonarr and Radarr</a></li>
+              <li><a class="nav-link" href="#connect">Connecting</a></li>
+              <li><a class="nav-link" href="#webhook-flow">How the webhook flow works</a></li>
+              <li><a class="nav-link" href="#processing">Processing settings</a></li>
+              <li><a class="nav-link" href="#media-servers">Refresh Plex, Emby or Jellyfin</a></li>
+              <li><a class="nav-link" href="#notifications">Messages: Discord, Telegram and more</a></li>
+              <li><a class="nav-link" href="#security">Security</a></li>
+              <li><a class="nav-link" href="#post-processing">Post-processing (advanced)</a></li>
+              <li><a class="nav-link" href="#api">API</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ and troubleshooting</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="col-lg-9 mux-docs-body">
+      <h1>Sonarr, Radarr and notifications</h1>
+      <p class="mux-lead">
+        Muxarr works from manual scans on its own. Connect Sonarr and Radarr and it also learns each
+        film's original language and cleans up new imports as they arrive. Notifications, on the same
+        Settings page, refresh your media server or send you a message when a conversion is done.
+        This page covers every Settings tab except Profiles.
+      </p>
+
+      <h2 id="why">Why connect Sonarr and Radarr</h2>
+      <p>Two things come from the connection:</p>
+      <ul>
+        <li><strong>Original language.</strong> Sonarr and Radarr know that Dark is German and Spirited Away is Japanese. Muxarr uses that to make the <span class="mux-ui">Original Language</span> row in a profile mean something. Without it, that row matches nothing and a foreign film could lose its real soundtrack.</li>
+        <li><strong>Automatic processing.</strong> A webhook (an automatic message one app sends another when something happens) lets Sonarr or Radarr tell Muxarr the moment a file is imported or renamed, so it gets cleaned up without anyone opening the Library.</li>
+      </ul>
+
+      <h2 id="connect">Connecting</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-integrations.png" alt="The Integrations tab with Muxarr URL, Sonarr and Radarr cards and path mappings" loading="lazy">
+      </figure>
+      <ol>
+        <li>Fill in <span class="mux-ui">Muxarr URL</span>: the address Sonarr and Radarr can reach Muxarr at.
+          <code>http://muxarr:8183</code> works when the containers share a Docker network; otherwise use
+          a LAN address such as <code>http://192.168.1.20:8183</code>. The address you type in your own
+          browser is not always reachable from another container.</li>
+        <li>For each service, enter its URL and API key (found in Sonarr or Radarr under
+          <span class="mux-ui">Settings &rsaquo; General &rsaquo; Security</span>) and click
+          <span class="mux-ui">Test Connection</span>.</li>
+        <li>Once connected, click <span class="mux-ui">Connect Webhook</span>. Muxarr creates the webhook
+          inside Sonarr or Radarr for you, with the right URL, events and API key. The card then shows
+          <span class="mux-ui">Webhook Active</span>.</li>
+        <li><span class="mux-ui">Save Settings</span>.</li>
+      </ol>
+      <p>
+        More than one Sonarr or Radarr? <span class="mux-ui">Add Sonarr</span> and <span class="mux-ui">Add Radarr</span>
+        add extra cards. If you prefer to set the webhook up by hand, expand
+        <span class="mux-ui">Manual Webhook Setup</span> at the bottom: it shows the exact URL to paste into a
+        Webhook connection in Sonarr or Radarr, with method POST and the <em>On Import</em> and
+        <em>On Rename</em> events.
+      </p>
+      <h3>Path mappings</h3>
+      <p>
+        Sonarr and Radarr report file paths as they see them. If their containers mount the media
+        differently from Muxarr's (they say <code>/tv/Dark/...</code>, Muxarr has it at
+        <code>/media/tv/Dark/...</code>), add a mapping from their root to yours. Leave this empty
+        when everything mounts media at the same path.
+      </p>
+
+      <h2 id="webhook-flow">How the webhook flow works</h2>
+      <p>When Sonarr or Radarr imports or renames a file:</p>
+      <ol>
+        <li>The webhook reaches Muxarr with the file path, the title and the original language.</li>
+        <li>Muxarr waits for the <span class="mux-ui">Processing delay</span> (60 seconds by default). This
+          gives tools that also react to imports, Bazarr in particular, time to finish writing
+          subtitles before Muxarr opens the file.</li>
+        <li>The file is scanned. Its profile is found by folder; a path mapping is applied first if
+          you set one up.</li>
+        <li>With <span class="mux-ui">Auto-queue files for conversion</span> on, the file is queued and converted
+          if there is anything to do. Switch it off if you only want new files scanned so you can
+          review them in the Library first.</li>
+        <li>Notifications fire when the conversion starts, completes or fails.</li>
+      </ol>
+      <p>
+        Renames are handled the same way, which is what keeps Muxarr in step when Sonarr or Radarr
+        move a file after import.
+      </p>
+
+      <h2 id="processing">Processing settings</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-processing.png" alt="The Processing tab with webhook, service and post-processing settings" loading="lazy">
+      </figure>
+      <dl class="row">
+        <dt class="col-sm-3">Auto-queue files for conversion</dt>
+        <dd class="col-sm-9">Whether files that arrive by webhook are converted right after scanning. On by default.</dd>
+        <dt class="col-sm-3">Processing delay</dt>
+        <dd class="col-sm-9">How long to wait after a webhook before touching the file. 60 seconds is a good default with Bazarr around; raise it if Bazarr takes longer to fetch subtitles.</dd>
+        <dt class="col-sm-3">Scan interval</dt>
+        <dd class="col-sm-9">A timed library scan, in minutes. 0 disables it. With webhooks in place you can leave it off; without them, an hourly scan is a common choice. Manual scans always work from the Library.</dd>
+        <dt class="col-sm-3">Conversion timeout</dt>
+        <dd class="col-sm-9">A conversion that runs longer than this is cancelled and marked failed. The default of 60 minutes is generous for a rewrite; 0 removes the limit.</dd>
+      </dl>
+      <p>The <span class="mux-ui">Post-Processing</span> section on this tab is covered <a href="#post-processing">further down</a>. Short version: it runs a command of your choice after a conversion; it does not rename files and you do not need it to refresh your media server.</p>
+
+      <h2 id="media-servers">Refresh Plex, Emby or Jellyfin after a conversion</h2>
+      <p>
+        After Muxarr rewrites a file, your media server still shows the old track list until it looks
+        at the file again. Add the server under <span class="mux-ui">Settings &rsaquo; Notifications</span> and
+        tick the <span class="mux-ui">Completed</span> trigger; Muxarr then asks it to refresh after each
+        conversion. This is the whole setup, no scripts needed.
+      </p>
+      <figure class="mux-shot">
+        <img src="../img/docs/notification-edit.png" alt="The Add Notification dialog with Jellyfin selected" loading="lazy">
+        <figcaption class="mux-caption">Adding a Jellyfin refresh. Every entry has a <span class="mux-ui">Test</span> button so you can check it right from the dialog.</figcaption>
+      </figure>
+      <dl class="row">
+        <dt class="col-sm-3">Plex</dt>
+        <dd class="col-sm-9">Server URL and your X-Plex-Token. Optionally a library section ID; by default Muxarr then asks Plex to scan only the folder of the converted file, which is quick even for a big library. Leave the section blank to refresh all libraries.</dd>
+        <dt class="col-sm-3">Emby, Jellyfin</dt>
+        <dd class="col-sm-9">Server URL and an API key. Optionally a library item ID to refresh only that library; leave it blank to refresh the whole server. <span class="mux-ui">Full metadata refresh</span> re-fetches everything instead of only what is missing, which is slower and rarely needed.</dd>
+      </dl>
+
+      <h2 id="notifications">Messages: Discord, Telegram and more</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-notifications.png" alt="The Notifications tab listing a Discord and a Jellyfin entry" loading="lazy">
+      </figure>
+      <p>
+        The same Notifications tab also sends messages. Every entry, message or refresh, has three
+        triggers: <span class="mux-ui">Started</span>, <span class="mux-ui">Completed</span> and
+        <span class="mux-ui">Failed</span>; new entries default to Completed and Failed. A completed
+        conversion reads like <em>"The Matrix - saved 412 MB (18.4%)"</em>; a failed one includes the
+        last line of the error.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead><tr><th>Provider</th><th>What it needs</th></tr></thead>
+          <tbody>
+            <tr><td>Discord, Slack</td><td>A webhook URL from a channel's integration settings.</td></tr>
+            <tr><td>Telegram</td><td>A bot token from @BotFather and the chat, group or channel ID.</td></tr>
+            <tr><td>Pushover</td><td>App token and user key.</td></tr>
+            <tr><td>Gotify</td><td>Server URL and an app token.</td></tr>
+            <tr><td>Ntfy</td><td>Server URL (ntfy.sh or your own), a topic, and an access token if your server needs one.</td></tr>
+            <tr><td>Apprise</td><td>The Apprise API URL, then either notification URLs (stateless) or a configuration key and optional tag (persistent).</td></tr>
+            <tr><td>Webhook</td><td>Any URL, with an optional Authorization header. Muxarr posts JSON with the event, title, body, filename, sizes before and after, and a timestamp. Use this to trigger your own automation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="security">Security</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-security.png" alt="The Security tab with login settings and the API key" loading="lazy">
+      </figure>
+      <p>
+        <span class="mux-ui">Login</span> puts a username and password in front of the web UI. If you skipped
+        it in the wizard you can enable it here, and change or disable it later.
+        <span class="mux-ui">Trust the local network</span> lets devices on your LAN in without logging in
+        while still asking anyone coming from outside. Behind a reverse proxy, make sure the proxy
+        forwards the real client address (<code>X-Forwarded-For</code>), otherwise every request looks
+        local.
+      </p>
+      <p>
+        The <span class="mux-ui">API Key</span> protects the webhook endpoint and the API. Sonarr and Radarr
+        get it automatically when you use <span class="mux-ui">Connect Webhook</span>. Regenerating it breaks
+        those connections and any dashboard using it, so reconnect them afterwards.
+      </p>
+
+      <h2 id="post-processing">Post-processing (advanced)</h2>
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <strong>Post-processing runs a command of your own after each successful conversion. That is all it does.</strong>
+        It does not rename or move files (nothing in Muxarr does; that stays with Sonarr and Radarr),
+        and you do not need it to refresh Plex, Emby or Jellyfin: add those under
+        <a href="#media-servers">Notifications</a> instead.
+      </div>
+      <p>
+        If you do have a job that should run after Muxarr is done, say cleaning up a subtitle file
+        next to the video, touching a marker file or writing to your own log, enter the command under
+        <span class="mux-ui">Settings &rsaquo; Processing &rsaquo; Post-Processing</span>. Muxarr fills in three
+        variables:
+      </p>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead><tr><th>Variable</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>{file}</code></td><td>Full path of the media file</td></tr>
+            <tr><td><code>{filename}</code></td><td>The filename without folder or extension</td></tr>
+            <tr><td><code>{directory}</code></td><td>The folder the file is in</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The preview under the command shows what would run for an example file.</p>
+
+      <h2 id="api">API</h2>
+      <figure class="mux-shot">
+        <img src="../img/docs/settings-api.png" alt="The API tab with the stats endpoint and a Homepage widget snippet" loading="lazy">
+      </figure>
+      <p>
+        <code>GET /api/stats</code> returns the numbers behind the dashboard and statistics pages as
+        JSON: file counts, total size, conversions, space saved and the codec, language and
+        resolution breakdowns. Pass the API key in an <code>X-Api-Key</code> header or as
+        <code>?apikey=</code>. The tab shows a ready-made curl line and a
+        <a href="https://gethomepage.dev/widgets/services/customapi/">Homepage</a> widget snippet you
+        can paste as-is.
+      </p>
+
+      <div class="mux-docs-pager d-flex justify-content-between">
+        <a href="library.html"><small>Previous</small><i class="bi bi-arrow-left"></i> Library and conversions</a>
+        <a href="faq.html" class="text-end"><small>Next</small>FAQ and troubleshooting <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>

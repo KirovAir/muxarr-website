@@ -88,6 +88,7 @@
         <li class="nav-item"><a class="nav-link" href="#setup"><i class="bi bi-download"></i> Setup</a></li>
         <li class="nav-item"><a class="nav-link" href="#screenshots"><i class="bi bi-images"></i> Screenshots</a></li>
         <li class="nav-item"><a class="nav-link" href="#support"><i class="bi bi-question-circle"></i> Support</a></li>
+        <li class="nav-item"><a class="nav-link" href="docs/"><i class="bi bi-book"></i> Docs</a></li>
         <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
       </ul>
     </div>
@@ -111,6 +112,7 @@
 
     <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
       <a class="btn btn-primary btn-lg" href="#setup"><i class="bi bi-download"></i> Get started</a>
+      <a class="btn btn-outline-secondary btn-lg" href="docs/"><i class="bi bi-book"></i> Read the docs</a>
       <a class="btn btn-outline-secondary btn-lg" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a>
     </div>
 
@@ -290,7 +292,7 @@
       - PGID=1000
     volumes:
       # Muxarr's own database and config
-      - /path/to/muxarr/data:/data
+      - /path/to/muxarr/config:/config
       # your media library, mount it wherever you like
       - /path/to/your/media:/media
     ports:
@@ -310,7 +312,7 @@
   -e PUID=1000 \
   -e PGID=1000 \
   -p 8183:8183 \
-  -v /path/to/muxarr/data:/data \
+  -v /path/to/muxarr/config:/config \
   -v /path/to/your/media:/media \
   --restart unless-stopped \
   ghcr.io/kirovair/muxarr:latest</code></pre>
@@ -319,11 +321,19 @@
 
     </div>
 
-    <p class="text-body-secondary mt-3 mb-5">
+    <p class="text-body-secondary mt-3 mb-2">
       <i class="bi bi-info-circle"></i>
       Images are published for <code>linux/amd64</code> and <code>linux/arm64</code>.
-      Only <code>/data</code> is fixed. Name your library mounts whatever suits your
+      Only <code>/config</code> is fixed. Name your library mounts whatever suits your
       setup and add as many as you need, then point a profile at them in the wizard.
+    </p>
+
+    <p class="text-body-secondary mb-5">
+      <i class="bi bi-info-circle"></i>
+      Older installs used <code>/data</code> instead of <code>/config</code>. That still works and
+      always will, so upgrading needs no action. To switch, stop the container, change
+      <code>/your/folder:/data</code> to <code>/your/folder:/config</code> and start it again. The
+      host folder stays where it is and nothing is copied.
     </p>
 
     <div class="row g-4 mb-5">
@@ -346,7 +356,7 @@
           <table class="table table-sm align-middle">
             <thead><tr><th>Path</th><th>Description</th></tr></thead>
             <tbody>
-              <tr><td><code>/data</code></td><td>Muxarr's own database and configuration. Keep this one as <code>/data</code>.</td></tr>
+              <tr><td><code>/config</code></td><td>Muxarr's own database and configuration. Keep this one as <code>/config</code>.</td></tr>
               <tr><td><code>/media</code></td><td>Your media library. The container path is up to you, use <code>/movies</code>, <code>/tv</code> or anything else.</td></tr>
             </tbody>
           </table>
@@ -355,6 +365,7 @@
     </div>
 
     <h3 class="h5">First run</h3>
+    <p class="text-body-secondary">The <a href="docs/">docs</a> walk through all of this with screenshots, from the wizard to your first profile.</p>
     <ol class="mux-steps">
       <li>Open <code>http://your-ip:8183</code> and the setup wizard will guide you through.</li>
       <li>Set a username and password (optional).</li>
@@ -417,19 +428,25 @@
     <h2 class="mux-heading">Support</h2>
 
     <div class="row g-4 text-center">
-      <div class="col-md-4">
+      <div class="col-md-6 col-lg-3">
+        <i class="bi bi-book mux-support-icon"></i>
+        <h3 class="h5">Documentation</h3>
+        <p class="mb-0">Profiles, fallback languages, notifications, FAQ.</p>
+        <a href="docs/">Read the docs</a>
+      </div>
+      <div class="col-md-6 col-lg-3">
         <i class="bi bi-github mux-support-icon"></i>
         <h3 class="h5">GitHub Issues</h3>
         <p class="mb-0">Report a bug or request a feature.</p>
         <a href="https://github.com/KirovAir/muxarr/issues">Open an issue</a>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6 col-lg-3">
         <i class="bi bi-box-seam mux-support-icon"></i>
         <h3 class="h5">Container registry</h3>
         <p class="mb-0">Every tag published to ghcr.io.</p>
         <a href="https://github.com/KirovAir/muxarr/pkgs/container/muxarr">Browse images</a>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6 col-lg-3">
         <i class="bi bi-journal-text mux-support-icon"></i>
         <h3 class="h5">Releases</h3>
         <p class="mb-0">Changelog and version history.</p>

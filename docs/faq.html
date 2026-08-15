@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ and troubleshooting | Muxarr docs</title>
+<meta name="description" content="Answers to the questions Muxarr users ask most: renaming, re-encoding, original language, hardlinks, .muxbak files, MP4, forced subtitles, failed conversions and more.">
+<meta name="theme-color" content="#0d0d1a">
+<link rel="canonical" href="https://muxarr.app/docs/faq.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Muxarr">
+<meta property="og:title" content="FAQ and troubleshooting | Muxarr docs">
+<meta property="og:description" content="Answers to the questions Muxarr users ask most.">
+<meta property="og:url" content="https://muxarr.app/docs/faq.html">
+<meta property="og:image" content="https://muxarr.app/img/og.png">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="../css/site.css" rel="stylesheet">
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', stored || system);
+  })();
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mux-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="../">
+      <img src="../img/logo.png" alt="" width="30" height="30">
+      <span>Muxarr</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 order-lg-last ms-lg-3">
+      <button class="btn btn-sm mux-theme-btn" type="button" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="bi bi-moon-stars"></i>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end" id="nav">
+      <ul class="navbar-nav align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="../"><i class="bi bi-house-door"></i> Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="../#setup"><i class="bi bi-download"></i> Setup</a></li>
+        <li class="nav-item"><a class="nav-link active" href="./"><i class="bi bi-book"></i> Docs</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/KirovAir/muxarr"><i class="bi bi-github"></i> GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mux-docs">
+  <div class="row g-5">
+
+    <aside class="col-lg-3">
+      <nav class="mux-docs-nav">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="./">Getting started</a></li>
+          <li class="nav-item"><a class="nav-link" href="profiles.html">Profiles</a></li>
+          <li class="nav-item"><a class="nav-link" href="library.html">Library and conversions</a></li>
+          <li class="nav-item"><a class="nav-link" href="integrations.html">Sonarr, Radarr and notifications</a></li>
+          <li class="nav-item"><a class="nav-link active" href="faq.html">FAQ and troubleshooting</a>
+            <ul class="nav flex-column mux-docs-sub">
+              <li><a class="nav-link" href="#general">General</a></li>
+              <li><a class="nav-link" href="#languages">Languages and tracks</a></li>
+              <li><a class="nav-link" href="#files">Files on disk</a></li>
+              <li><a class="nav-link" href="#problems">When something goes wrong</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="col-lg-9 mux-docs-body">
+      <h1>FAQ and troubleshooting</h1>
+      <p class="mux-lead">
+        The questions that come up most in issues and discussions. If yours is not here,
+        <a href="https://github.com/KirovAir/muxarr/issues">open an issue</a>.
+      </p>
+
+      <h2 id="general">General</h2>
+
+      <h3>Does Muxarr re-encode my files? Is there quality loss?</h3>
+      <p>
+        No. Muxarr copies the video and audio unchanged and leaves out only the tracks you chose to
+        remove. That is what makes it fast and lossless. When an MKV only needs new names or flags,
+        it does not even rewrite the file; the metadata is edited in place.
+      </p>
+
+      <h3>Does Muxarr rename or move files?</h3>
+      <p>
+        No, never. Not the filename, not the folder, not the extension; renaming is Sonarr's and
+        Radarr's job. Post-processing is not a rename feature either: it runs whatever command you
+        give it after a conversion, nothing more. See
+        <a href="integrations.html#post-processing">post-processing</a>.
+      </p>
+
+      <h3>How do I get Plex, Emby or Jellyfin to notice the changed file?</h3>
+      <p>
+        Add the server under <span class="mux-ui">Settings &rsaquo; Notifications</span> with the
+        <span class="mux-ui">Completed</span> trigger. Muxarr then asks it to refresh after each conversion.
+        Details under <a href="integrations.html#media-servers">Plex, Emby and Jellyfin</a>.
+      </p>
+
+      <h3>Which files does Muxarr handle?</h3>
+      <p>
+        MKV, WebM, MP4 and M4V. Files stay in their own format; Muxarr does not turn MKV into MP4 or
+        the other way round. One difference: an MKV that only needs new names or flags is edited in
+        place, while an MP4 is always rewritten, still without re-encoding. If the MP4 was set up for
+        streaming (fast start), it stays that way.
+      </p>
+
+      <h3>Can I run Muxarr on a Raspberry Pi or a small NAS?</h3>
+      <p>
+        Yes. Since nothing is re-encoded, the work is mostly disk I/O. Images are published for
+        amd64 and arm64.
+      </p>
+
+      <h3>How do I update?</h3>
+      <p>
+        With Docker Compose: <code>docker compose pull</code> followed by <code>docker compose up -d</code>
+        in the folder with your compose file. Your database and settings live in the <code>/config</code>
+        volume and are migrated automatically on start; keep that volume mounted, and back it up before
+        a big update if you like to be careful.
+      </p>
+
+      <h2 id="languages">Languages and tracks</h2>
+
+      <h3>The Original Language of my files shows "-"</h3>
+      <p>
+        Muxarr learns the original language from Sonarr and Radarr, so first check that they are
+        connected under <span class="mux-ui">Settings &rsaquo; Integrations</span>. Files that already existed
+        get their language on the next sync, which runs once a day; new imports get it instantly
+        through the webhook. If a title is not in Sonarr or Radarr at all, Muxarr has no way to know.
+      </p>
+
+      <h3>A foreign film lost its original soundtrack</h3>
+      <p>
+        Either <span class="mux-ui">Original Language</span> is missing from the profile's audio list, or Muxarr
+        did not know the original language for that file (see above). Add the row, make sure Sonarr
+        or Radarr is connected, click <span class="mux-ui">Force</span> in the Library (or
+        <span class="mux-ui">Analyze File</span> on that one file), and check the preview on the file's page
+        before you queue it again. Muxarr always keeps at least one audio track, so the file is not silent, but
+        it may have kept the dub rather than the original.
+      </p>
+
+      <h3>What about tracks with no language tag?</h3>
+      <p>
+        A file with exactly one untagged audio track is treated as the original language, provided
+        Muxarr knows what that is and <span class="mux-ui">Assume undetermined language is original language</span>
+        is on (it is by default for audio). With several untagged tracks Muxarr does not guess. To
+        keep untagged tracks unconditionally, add <span class="mux-ui">Undetermined</span> to the language list.
+        To fix the tags for a whole season at once, use <a href="library.html#batch">batch edit</a>.
+      </p>
+
+      <h3>German subtitles if available, otherwise English?</h3>
+      <p>
+        That is exactly what fallback languages are for: put German first, add English below it and
+        click its <i class="bi bi-arrow-return-right"></i> button. See
+        <a href="profiles.html#fallback">Fallback languages</a>.
+      </p>
+
+      <h3>Why was a forced subtitle kept?</h3>
+      <p>
+        Forced subtitles are the ones for foreign dialogue and signs, and they are kept whenever
+        their language is on your list, because you generally want them with the matching audio.
+        They never count as "having" a language for fallback purposes, so a forced-only track does
+        not block a fallback. If a specific file should lose one, use <a href="library.html#custom">Custom
+        Conversion</a>.
+      </p>
+
+      <h3>The commentary or SDH track was kept even though I remove them</h3>
+      <p>
+        Muxarr keeps a commentary or SDH track when it is the only track that language has, so the
+        language does not disappear entirely. Two regular tracks plus a commentary: the commentary
+        goes. Just a commentary: it stays. Same for SDH, where a forced subtitle does not count as
+        the regular alternative.
+      </p>
+
+      <h3>VFQ, VFF, Latino, Castellano: can Muxarr tell dubs apart?</h3>
+      <p>
+        Yes. Muxarr recognises regional variants from language tags and from track names, and lets
+        you list French (Canada), Spanish (Latin America) and friends as languages of their own. See
+        <a href="profiles.html#variants">Regional variants</a>.
+      </p>
+
+      <h3>I changed a flag or name in batch edit and it came back after a rescan</h3>
+      <p>
+        Muxarr reads flags such as forced, SDH and commentary back from track names on every scan,
+        because many releases only carry them in the name. If the name still says "SDH", the flag
+        returns. Change or clear the name in the same edit; batch edit points this out when it
+        applies.
+      </p>
+
+      <h2 id="files">Files on disk</h2>
+
+      <h3>What are .muxtmp and .muxbak files?</h3>
+      <p>
+        <code>.muxtmp</code> is the new file being written; <code>.muxbak</code> is the original during
+        the swap. Both exist only for seconds in normal operation. If Muxarr was killed mid-swap you
+        may find one lying around; on the next start it cleans up: temp files are deleted, and a
+        <code>.muxbak</code> whose original is missing is restored. Do not delete a <code>.muxbak</code>
+        by hand if the original is gone, it is your file.
+      </p>
+
+      <h3 id="hardlinks">What about hardlinks and seeding?</h3>
+      <p>
+        When Sonarr or Radarr import by hardlink, the download and the library file are two paths to
+        the same data on disk. Two things can then go wrong: a metadata edit done in place changes
+        the seeding copy as well, and the torrent fails its hash checks; a full rewrite leaves the
+        seed alone but splits the link, so the file now takes twice the space. Turn on
+        <span class="mux-ui">Skip hardlinked files</span> in the profile and Muxarr leaves those files out of
+        scans and conversions until only one link remains, typically once you stop seeding and the
+        download is removed. Files that are hardlinked but not skipped show a
+        <i class="bi bi-link-45deg"></i> icon in the Library.
+      </p>
+
+      <h3>What does a scan warning mean?</h3>
+      <p>
+        ffprobe reported a problem while reading the file: a truncated stream, an odd container
+        element, and so on. The file was still scanned. Filter the Library on
+        <span class="mux-ui">Has Scan Warning</span> to find them and check the probe output at the bottom of
+        the file's page. Usually the file plays fine and converts fine.
+      </p>
+
+      <h3>Where does Muxarr keep its data?</h3>
+      <p>
+        Everything is in the <code>/config</code> volume, in an SQLite database. Back that folder up
+        and you have your profiles, settings and history. Older installs mounted it at <code>/data</code>,
+        which still works.
+      </p>
+
+      <h2 id="problems">When something goes wrong</h2>
+
+      <h3>A conversion failed</h3>
+      <p>
+        Open the conversion and read the log; the reason is normally in the last lines. Common ones:
+      </p>
+      <ul>
+        <li><strong>Permission denied</strong>: <code>PUID</code> and <code>PGID</code> are the user and group the container runs as; that user needs write access to the media folder.</li>
+        <li><strong>No space left</strong>: the new file is written next to the original, so you need free space for one more copy of the largest file.</li>
+        <li><strong>Validation failed</strong>: the result did not match the plan (a missing track, a wrong duration). The original is untouched. Open the file in the Library, click <span class="mux-ui">Analyze File</span> and queue it again; if it keeps failing, open an issue with the log.</li>
+        <li><strong>Timed out</strong>: raise <span class="mux-ui">Conversion timeout</span> under Processing, or set it to 0.</li>
+      </ul>
+
+      <h3>Nothing gets converted after a download</h3>
+      <p>Check, in this order:</p>
+      <ol>
+        <li>The Sonarr or Radarr card shows <span class="mux-ui">Webhook Active</span>. If not, click <span class="mux-ui">Connect Webhook</span>.</li>
+        <li><span class="mux-ui">Muxarr URL</span> is an address Sonarr and Radarr can actually reach.</li>
+        <li>The file's folder is covered by a profile, taking <a href="integrations.html#connect">path mappings</a> into account if the containers see different paths.</li>
+        <li><span class="mux-ui">Auto-queue files for conversion</span> is on.</li>
+        <li>The queue is not paused (there is a banner on the Conversions page when it is).</li>
+        <li>The Logs page, filtered to warnings (WRN) and errors (ERR).</li>
+      </ol>
+
+      <h3>The Library says a file needs work, but queueing does nothing</h3>
+      <p>
+        The toast after queueing tells you why: a conversion is already queued or running for it,
+        the file is not reachable right now (an unmounted share), or it became hardlinked since it
+        was scanned and the profile skips those.
+      </p>
+
+      <h3>Bazarr and Muxarr fight over the same file</h3>
+      <p>
+        Both react to imports. Give Bazarr a head start with the <span class="mux-ui">Processing delay</span>
+        (60 seconds by default). Muxarr also does not use external subtitle files, so Bazarr's
+        <code>.srt</code> files next to the video are never touched.
+      </p>
+
+      <h3>Login keeps asking on my LAN, or never asks from outside</h3>
+      <p>
+        <span class="mux-ui">Trust the local network</span> decides by the client address. Behind a reverse
+        proxy every request comes from the proxy, so make sure it forwards
+        <code>X-Forwarded-For</code>; otherwise everyone looks local, or nobody does.
+      </p>
+
+      <div class="mux-docs-pager d-flex justify-content-between">
+        <a href="integrations.html"><small>Previous</small><i class="bi bi-arrow-left"></i> Sonarr, Radarr and notifications</a>
+        <a href="./" class="text-end"><small>Back to</small>Getting started <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer class="mux-footer text-center">
+  <div class="container">
+    <p class="mb-1">
+      Built with <a href="https://dotnet.microsoft.com/">.NET</a>,
+      <a href="https://mkvtoolnix.download/">MKVToolNix</a> and
+      <a href="https://ffmpeg.org/">FFmpeg</a>. Licensed GPL-3.0.
+    </p>
+    <p class="mb-0 small">Muxarr is not affiliated with Sonarr, Radarr, or any other *arr projects.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/site.js"></script>
+</body>
+</html>
