@@ -12,8 +12,19 @@
     --mux-orange: #f0521e;
 }
 
-html {
-    scroll-behavior: smooth;
+/* Bootstrap's reboot puts scroll-behavior: smooth on :root, and Chrome then
+   smooth-scrolls to the URL fragment while the page is still loading; images
+   and the video laying out cancel that animation, so anchor links from other
+   pages land at the top. Jump instantly on load, scroll smoothly only once the
+   user has interacted with the page. */
+:root {
+    scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html:focus-within {
+        scroll-behavior: smooth;
+    }
 }
 
 /* Light theme: warm off-white rather than flat #fff */
@@ -306,10 +317,6 @@ section[id], header[id] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-
     .card,
     .card:hover {
         transition: none;
