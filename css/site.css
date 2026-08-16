@@ -63,6 +63,15 @@ section[id], header[id] {
     scroll-margin-top: 64px;
 }
 
+/* The last section is short, so without this the page cannot scroll far
+   enough for the Support anchor to reach the top like the others do. Leaves
+   room for the navbar above and the footer (about 7rem) below. */
+@media (min-width: 992px) {
+    #support {
+        min-height: calc(100vh - 64px - 7rem);
+    }
+}
+
 /* ---- Navbar (stays navy in both themes, like the app sidebar) ---- */
 
 /* The bar stays navy in both themes, so pin Bootstrap's dark navbar variables
