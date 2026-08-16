@@ -228,12 +228,21 @@
         the file's page. Usually the file plays fine and converts fine.
       </p>
 
-      <h3>Where does Muxarr keep its data?</h3>
+      <h3 id="appdata">Where does Muxarr keep its data?</h3>
       <p>
         Everything is in the <code>/config</code> volume, in an SQLite database. Back that folder up
-        and you have your profiles, settings and history. Older installs mounted it at <code>/data</code>,
-        which still works.
+        and you have your profiles, settings and history. It is the same layout the linuxserver
+        containers use, so Muxarr sits next to Sonarr and Radarr without surprises.
       </p>
+      <p>
+        Older versions kept the database in <code>/data</code>. That still works, and Muxarr shows a
+        small yellow bar at the top while it does. Moving over is a one-line change:
+      </p>
+      <ul>
+        <li><strong>You mounted a folder at <code>/data</code>:</strong> change that line to <code>:/config</code>, same host folder, and restart. Nothing is copied or moved; the database is simply used from its new path. To roll back, point it at <code>:/data</code> again.</li>
+        <li><strong>Your appdata folder is empty</strong> (you never mounted one, or you mounted <code>/config</code> on a version that ignored it): the database sits in a Docker volume. Stop the container, run <code>docker cp muxarr:/data/. /path/to/appdata/</code> before removing it, then mount that folder at <code>/config</code>.</li>
+        <li><strong>Already recreated the container and Muxarr starts empty?</strong> The old database is still in a dangling volume: <code>docker volume ls</code>, then copy <code>muxarr.db</code> out of <code>/var/lib/docker/volumes/&lt;id&gt;/_data</code> into your appdata folder.</li>
+      </ul>
 
       <h2 id="problems">When something goes wrong</h2>
 
