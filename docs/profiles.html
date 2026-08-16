@@ -282,6 +282,12 @@
         <li>Two variants never cover each other, so <span class="mux-ui">French (Canada)</span> plus a
           <span class="mux-ui">French (France)</span> fallback is a clean way to say "Quebec if there is one, otherwise France".</li>
       </ul>
+      <p>
+        In track names, <code>{code}</code> gives the region code (<code>FR-CA</code>) and
+        <code>{variant}</code> the marker people actually write (<code>VFQ</code>), so
+        <code>{code} {variant} {codec} {channels}</code> comes out as "FR-CA VFQ AAC 2.0" and, for a
+        plain English track, "EN AAC 2.0".
+      </p>
 
       <h2 id="extras">Commentary, SDH and codecs</h2>
       <dl class="row">
@@ -329,6 +335,7 @@
           <tbody>
             <tr><td><code>{language}</code></td><td>Full language name, "English"</td></tr>
             <tr><td><code>{nativelanguage}</code></td><td>Native name, "Français"</td></tr>
+            <tr><td><code>{variant}</code></td><td>The marker a regional variant goes by in release names: "VFQ", "VFF", "Latino", "CHT". Nothing for a plain language (from v0.9.8)</td></tr>
             <tr><td><code>{code}</code></td><td>Short code in capitals, "EN"</td></tr>
             <tr><td><code>{lang}</code></td><td>The raw language code from the track</td></tr>
             <tr><td><code>{codec}</code></td><td>Codec name, "E-AC-3"</td></tr>
