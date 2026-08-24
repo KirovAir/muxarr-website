@@ -161,6 +161,8 @@
         <dd class="col-sm-9">A timed library scan, in minutes. 0 disables it. With webhooks in place you can leave it off; without them, an hourly scan is a common choice. Manual scans always work from the Library.</dd>
         <dt class="col-sm-3">Conversion timeout</dt>
         <dd class="col-sm-9">A conversion that runs longer than this is cancelled and marked failed. The default of 60 minutes is generous for a rewrite; 0 removes the limit.</dd>
+        <dt class="col-sm-3">Queue new files found by a scan</dt>
+        <dd class="col-sm-9">A file a scan adds to the library that needs work is queued right away, the scan equivalent of auto-queue for webhooks. The usual reason is <a href="faq.html#hardlinks">hardlinks</a>: a file skipped while it was still seeding gets picked up by the next scan once the extra link is gone. Off by default, because the first scan of a new library would queue everything that needs work.</dd>
       </dl>
       <p>The <span class="mux-ui">Post-Processing</span> section on this tab is covered <a href="#post-processing">further down</a>. Short version: it runs a command of your choice after a conversion; it does not rename files and you do not need it to refresh your media server.</p>
 
