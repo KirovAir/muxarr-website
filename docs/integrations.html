@@ -264,6 +264,14 @@
         <a href="https://gethomepage.dev/widgets/services/customapi/">Homepage</a> widget snippet you
         can paste as-is.
       </p>
+      <p>
+        <code>POST /api/queue</code> queues every file that needs work, the same set as the Library's
+        <span class="mux-ui">Needs Any Work</span> filter; add <code>?filter=tracks</code> or
+        <code>?filter=metadata</code> to narrow it down. Files already queued, hardlinked or missing are
+        skipped, and the response tells you how many were queued. Turn off
+        <span class="mux-ui">Auto-queue files for conversion</span> and call it from a cron job when you
+        want imports scanned right away but converted at night, when the disks are quiet.
+      </p>
 
       <div class="mux-docs-pager d-flex justify-content-between">
         <a href="library.html"><small>Previous</small><i class="bi bi-arrow-left"></i> Library and conversions</a>
