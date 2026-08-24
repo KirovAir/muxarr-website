@@ -297,6 +297,8 @@
         <dd class="col-sm-9">Drops the subtitles for deaf and hard-of-hearing viewers when a regular subtitle in the same language exists. A forced subtitle does not count as a regular one, since it only covers foreign dialogue and signs.</dd>
         <dt class="col-sm-3">Remove audio description tracks</dt>
         <dd class="col-sm-9">The audio equivalent: drops narrated tracks for blind and low-vision viewers, unless they are the only option.</dd>
+        <dt class="col-sm-3">Exclude audio codecs</dt>
+        <dd class="col-sm-9">Removes audio tracks of specific codecs regardless of language, for a player that cannot decode TrueHD or DTS-HD, or to settle a tie between two lossless tracks when you limit the tracks per language. A language with only excluded tracks ends up without audio in that language, so check the preview.</dd>
         <dt class="col-sm-3">Exclude subtitle codecs</dt>
         <dd class="col-sm-9">Removes subtitle tracks of specific formats regardless of language. The usual reason is dropping picture-based PGS and VobSub in favour of text subtitles. Mind that a language with only a PGS track then ends up with no subtitles at all; the preview shows you when that happens.</dd>
       </dl>
