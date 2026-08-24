@@ -169,7 +169,9 @@
         After Muxarr rewrites a file, your media server still shows the old track list until it looks
         at the file again. Add the server under <span class="mux-ui">Settings &rsaquo; Notifications</span> and
         tick the <span class="mux-ui">Completed</span> trigger; Muxarr then asks it to refresh after each
-        conversion. This is the whole setup, no scripts needed.
+        conversion. For a big batch (a whole series coming in at once) tick
+        <span class="mux-ui">Queue finished</span> instead: one refresh when the queue runs empty, rather than
+        one every few seconds. This is the whole setup, no scripts needed.
       </p>
       <figure class="mux-shot">
         <img src="../img/docs/notification-edit.png" alt="The Add Notification dialog with Jellyfin selected" loading="lazy" width="2880" height="1800">
@@ -187,11 +189,13 @@
         <img src="../img/docs/settings-notifications.png" alt="The Notifications tab listing a Discord and a Jellyfin entry" loading="lazy" width="2880" height="1240">
       </figure>
       <p>
-        The same Notifications tab also sends messages. Every entry, message or refresh, has three
-        triggers: <span class="mux-ui">Started</span>, <span class="mux-ui">Completed</span> and
-        <span class="mux-ui">Failed</span>; new entries default to Completed and Failed. A completed
-        conversion reads like <em>"The Matrix - saved 412 MB (18.4%)"</em>; a failed one includes the
-        last line of the error.
+        The same Notifications tab also sends messages. Every entry, message or refresh, has four
+        triggers: <span class="mux-ui">Started</span>, <span class="mux-ui">Completed</span>,
+        <span class="mux-ui">Failed</span> and <span class="mux-ui">Queue finished</span>; new entries
+        default to Completed and Failed. A completed conversion reads like
+        <em>"The Matrix - saved 412 MB (18.4%)"</em>; a failed one includes the last line of the error.
+        Queue finished sends one message per batch with the totals, like
+        <em>"24 file(s) processed, saved 3.1 GB (12.6%), 1 failed"</em>.
       </p>
       <div class="table-responsive">
         <table class="table table-sm align-middle">
