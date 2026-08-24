@@ -289,6 +289,18 @@
         <code>X-Forwarded-For</code>; otherwise everyone looks local, or nobody does.
       </p>
 
+      <h3 id="lost-password">I lost my password</h3>
+      <p>
+        Start the container once with the environment variable <code>MUXARR__AUTH__RESET=true</code>.
+        Muxarr removes the login on that start and everything else stays as it was. Open the UI, set a
+        new password under <span class="mux-ui">Settings &gt; Security</span>, then remove the variable
+        again or the login is wiped on every restart.
+      </p>
+      <p>
+        On a version without this variable: stop the container, open <code>muxarr.db</code> in your appdata
+        folder with any SQLite tool and run <code>DELETE FROM Config WHERE Id='Auth';</code>, then start it again.
+      </p>
+
       <div class="mux-docs-pager d-flex justify-content-between">
         <a href="integrations.html"><small>Previous</small><i class="bi bi-arrow-left"></i> Sonarr, Radarr and notifications</a>
         <a href="./" class="text-end"><small>Back to</small>Getting started <i class="bi bi-arrow-right"></i></a>
