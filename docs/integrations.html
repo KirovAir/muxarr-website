@@ -91,10 +91,11 @@
       </p>
 
       <h2 id="why">Why connect Sonarr and Radarr</h2>
-      <p>Two things come from the connection:</p>
+      <p>Three things come from the connection:</p>
       <ul>
         <li><strong>Original language.</strong> Sonarr and Radarr know that Dark is German and Spirited Away is Japanese. Muxarr uses that to make the <span class="mux-ui">Original Language</span> row in a profile mean something. Without it, that row matches nothing and a foreign film could lose its real soundtrack.</li>
         <li><strong>Automatic processing.</strong> A webhook (an automatic message one app sends another when something happens) lets Sonarr or Radarr tell Muxarr the moment a file is imported or renamed, so it gets cleaned up without anyone opening the Library.</li>
+        <li><strong>Staying in sync.</strong> After a conversion Muxarr tells Sonarr or Radarr to rescan the file, so they show the tracks that are actually in it. When their naming format has something in it that changed, like the audio codec or languages, they rename the file and Muxarr follows the new name. Nothing to switch on.</li>
       </ul>
 
       <h2 id="connect">Connecting</h2>
@@ -278,6 +279,8 @@
         skipped, and the response tells you how many were queued. Turn off
         <span class="mux-ui">Auto-queue files for conversion</span> and call it from a cron job when you
         want imports scanned right away but converted at night, when the disks are quiet.
+        <code>GET /api/conversions</code> lists conversions, newest first and paged; add
+        <code>?filePath=</code> to follow one file after queueing it.
       </p>
 
       <div class="mux-docs-pager d-flex justify-content-between">

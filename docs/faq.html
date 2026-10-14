@@ -94,9 +94,11 @@
 
       <h3>Does Muxarr rename or move files?</h3>
       <p>
-        No, never. Not the filename, not the folder, not the extension; renaming is Sonarr's and
-        Radarr's job. Post-processing is not a rename feature either: it runs whatever command you
-        give it after a conversion, nothing more. See
+        Not by itself. Not the filename, not the folder, not the extension; renaming is Sonarr's and
+        Radarr's job. What Muxarr does do, when they are connected, is tell them a file changed: they
+        rescan it, and rename it when their own naming format has something in it that changed, like
+        the audio codec or languages. Muxarr then follows the new name. Post-processing is not a rename
+        feature either: it runs whatever command you give it after a conversion, nothing more. See
         <a href="integrations.html#post-processing">post-processing</a>.
       </p>
 
